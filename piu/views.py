@@ -9,12 +9,14 @@ from bottle import jinja2_template as template
 
 cookie = {'expires': 60*60*24*30*12}
 
+def sign(id, data):
+    return sha1(str(id) + data.encode('utf-8')).hexdigest()
+
 def paste(id, data, lexer):
     '''actually paste data in redis'''
     response.set_cookie('lexer', lexer, **cookie)
     # BUG: this does not override old cookie
-    response.set_cookie('edit-%s' % id, sha1(unicode(id) + data).hexdigest(),
-                        **cookie)
+    response.set_cookie('edit-%s' % id, sign(id, data), **cookie)
 
     redis.sadd(key('%s:list', id), 1)
     redis.set(key('%s:1:raw', id), data)
@@ -59,7 +61,7 @@ def show(id):
         return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
-    owner = edit == sha1(id + redis[key('%s:1:raw', id)]).hexdigest()
+    owner = edit == sign(id, redis[key('%s:1:raw', id)])
 
     return template('show', data=data, id=id, owner=owner)
 
@@ -71,7 +73,7 @@ def edit(id):
         return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
-    owner = edit == sha1(id + redis[key('%s:1:raw', id)]).hexdigest()
+    owner = edit == sign(id, redis[key('%s:1:raw', id)])
     if not owner:
         return redirect('/%s/' % id, 302)
 

@@ -53,7 +53,10 @@ def show(id):
     lst = redis.smembers(key('%s:list', id))
     if not lst:
         return redirect('/', 302)
-    data = [redis[key('%s:%s:html', id, pk)] for pk in lst]
+    try:
+        data = [redis[key('%s:%s:html', id, pk)] for pk in lst]
+    except KeyError:
+        return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sha1(id + redis[key('%s:1:raw', id)]).hexdigest()

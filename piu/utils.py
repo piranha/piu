@@ -9,13 +9,13 @@ def dec(s):
 OPTIONS = {'html': {'linenos': 'table'}}
 
 def highlight(code, lexer='guess', formatter='html'):
-    if lexer == 'guess':
-        lexer = lexers.guess_lexer(code)
-    else:
-        try:
+    try:
+        if lexer == 'guess':
+            lexer = lexers.guess_lexer(code)
+        else:
             lexer = lexers.get_lexer_by_name(lexer)
-        except lexers.ClassNotFound:
-            lexer = lexers.get_lexer_by_name('text')
+    except lexers.ClassNotFound:
+        lexer = lexers.get_lexer_by_name('text')
 
     try:
         formatter = formatters.get_formatter_by_name(

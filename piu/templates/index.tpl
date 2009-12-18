@@ -1,5 +1,7 @@
 {% extends "base" %} -*- mode: django-html -*-
 
+{% set deflexer = request.COOKIES.get("lexer", "guess") %} 
+
 {% block content %}
 <form action="." method="post">
   <div id="selector">
@@ -20,7 +22,9 @@
     <span class="note">(press Ctrl-J to select from keyboard)</span>
   </div>
 
-  <div><textarea id="text" name="data" rows="20" cols="120"></textarea></div>
+  <div>
+    <textarea id="text" name="data" rows="20" cols="120">{{ data }}</textarea>
+  </div>
   <input type="submit" value="Paste!">
   <span class="note">(or press Ctrl-Enter)</span>
 </form>

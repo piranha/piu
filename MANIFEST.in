@@ -1,2 +1,3 @@
 include piu/static/*
+include piu/static/styles/*
 include piu/templates/*

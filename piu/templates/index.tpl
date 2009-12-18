@@ -18,7 +18,7 @@
     <span class="hot" rel="js">JavaScript</span> |
     <span class="hot" rel="rb">Ruby</span> |
     <span class="hot" rel="css">CSS</span> |
-    <span class="hot" rel="html">HTMl</span> |
+    <span class="hot" rel="html">HTML</span> |
     <span class="hot" rel="django">Django/Jinja</span>
     <span class="note">(press Ctrl-J to select from keyboard)</span>
   </div>

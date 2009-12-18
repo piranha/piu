@@ -2,8 +2,8 @@
 
 {% block content %}
 <form action="." method="post">
-  <div id="lexers">
-    <select name="lexer" id="id-lexer">
+  <div id="selector">
+    <select name="lexer" id="lexers">
       <option value="guess">Guess type</option>
       {%- for alias, name in lexers %}
       <option value="{{ alias }}"
@@ -11,14 +11,18 @@
       {%- endfor %}
     </select>
 
-    <span class="hot" rel="python">Python</span>
-    <span class="hot" rel="js">JavaScript</span>
-    <span class="hot" rel="rb">Ruby</span>
-    <span class="hot" rel="css">CSS</span>
+    <span class="hot" rel="guess">Guess</span> |
+    <span class="hot" rel="python">Python</span> |
+    <span class="hot" rel="js">JavaScript</span> |
+    <span class="hot" rel="rb">Ruby</span> |
+    <span class="hot" rel="css">CSS</span> |
     <span class="hot" rel="django">Django/Jinja</span>
+    <span class="note">(press Ctrl-J to select from keyboard)</span>
   </div>
 
-  <div><textarea name="data" rows="20" cols="120"></textarea></div>
+  <div><textarea id="text" name="data" rows="20" cols="120"></textarea></div>
   <input type="submit" value="Paste!">
+  <span class="note">(or press Ctrl-Enter or Ctrl-P)</span>
 </form>
+<script>document.getElementById("text").focus();</script>
 {% endblock %}

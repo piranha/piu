@@ -12,6 +12,8 @@ setup(name='piu',
       author='Alexander Solovyov',
       author_email='piranha@piranha.org.ua',
       packages=['piu'],
+      include_package_data=True,
+      install_requires=['opster', 'bottle'],
       entry_points='''
       [console_scripts]
       piu = piu:main

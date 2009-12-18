@@ -8,6 +8,7 @@
   <title>paste.in.ua: {{ title }}</title>
   <link rel="stylesheet" href="/static/styles/default.css">
   <script src="/static/jquery-1.3.2.min.js"></script>
+  <script src="/static/main.js"></script>
 </head>
 <body>
   <header>

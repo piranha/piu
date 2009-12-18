@@ -11,11 +11,11 @@
       {%- endfor %}
     </select>
 
-    <span class="hot python">Python</span>
-    <span class="hot js">JavaScript</span>
-    <span class="hot ruby">Ruby</span>
-    <span class="hot css">CSS</span>
-    <span class="hot django">Django/Jinja</span>
+    <span class="hot" rel="python">Python</span>
+    <span class="hot" rel="js">JavaScript</span>
+    <span class="hot" rel="rb">Ruby</span>
+    <span class="hot" rel="css">CSS</span>
+    <span class="hot" rel="django">Django/Jinja</span>
   </div>
 
   <div><textarea name="data" rows="20" cols="120"></textarea></div>

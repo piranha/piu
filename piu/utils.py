@@ -3,6 +3,9 @@ from pygments import lexers, formatters, highlight as highlight_
 def key(format, *args):
     return 'piu:' + format % args
 
+def dec(s):
+    return s.decode('utf-8')
+
 OPTIONS = {'html': {'linenos': 'table'}}
 
 def highlight(code, lexer='guess', formatter='html'):

@@ -2,9 +2,12 @@ import uuid
 import os.path as op
 
 from piu import redis
-from piu.utils import key, highlight, style, lexerlist
+from piu.utils import key, highlight, style, lexerlist, dec
 from bottle import route, request, redirect, send_file, response
 from bottle import jinja2_template as template
+
+def dec(s):
+    return s.decode('utf-8')
 
 @route('/')
 def index():
@@ -13,7 +16,7 @@ def index():
 
 @route('/', method='POST')
 def paste():
-    data = request.POST.get('data')
+    data = dec(request.POST.get('data'))
     if not data:
         return redirect('/', 302)
     lexer = request.POST.get('lexer', 'guess')

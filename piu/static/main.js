@@ -15,10 +15,9 @@ $(document).ready(function() {
 
     shortcut.add('ctrl+enter', function() {
         if (!$('#text').val()) return;
-        console.log('submit!');
-        return $('form').submit();
+        $('form').submit();
     });
     shortcut.add('ctrl+j', function() { lexers.focus(); });
-    // shortcut.add('ctrl+n', function() { document.location.href = '/'; });
+    shortcut.add('ctrl+n', function() { document.location.href = '/'; });
 });
 

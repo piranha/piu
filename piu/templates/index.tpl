@@ -22,7 +22,7 @@
 
   <div><textarea id="text" name="data" rows="20" cols="120"></textarea></div>
   <input type="submit" value="Paste!">
-  <span class="note">(or press Ctrl-Enter or Ctrl-P)</span>
+  <span class="note">(or press Ctrl-Enter)</span>
 </form>
 <script>document.getElementById("text").focus();</script>
 {% endblock %}

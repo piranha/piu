@@ -66,8 +66,9 @@ def show(id):
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, redis[key('%s:1:raw', id)])
 
-    return template('show', data=data, id=id, owner=owner,
-                    lexer=(dict(lexerlist()))[redis[key('%s:1:lexer', id)]],
+    lexer=lexers.get_lexer_by_name([redis[key('%s:1:lexer', id)]]).name
+
+    return template('show', data=data, id=id, owner=owner, lexer=lexer,
                     date=fromepoch(redis.get(key('%s:1:date', id)) or 0))
 
 @route('/:id/edit/')

@@ -3,11 +3,13 @@ import os.path as op
 from hashlib import sha1
 from datetime import datetime as dt
 
+from pygments import lexers
+from bottle import route, request, redirect, send_file, response
+from bottle import jinja2_template as template
+
 from piu import redis
 from piu.utils import key, highlight, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
-from bottle import route, request, redirect, send_file, response
-from bottle import jinja2_template as template
 
 cookie = {'expires': 60*60*24*30*12}
 

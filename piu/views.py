@@ -1,9 +1,11 @@
 import uuid
 import os.path as op
 from hashlib import sha1
+from datetime import datetime as dt
 
 from piu import redis
 from piu.utils import key, highlight, style, lexerlist, dec
+from piu.utils import toepoch, fromepoch
 from bottle import route, request, redirect, send_file, response
 from bottle import jinja2_template as template
 
@@ -23,6 +25,7 @@ def paste(id, data, lexer):
     result, lexer = highlight(data, lexer)
     redis.set(key('%s:1:html', id), result)
     redis.set(key('%s:1:lexer', id), lexer)
+    redis.set(key('%s:1:date', id), toepoch(dt.now()))
     print response.wsgiheaders()
 
 @route('/static/:name#.*#')
@@ -56,14 +59,16 @@ def show(id):
     if not lst:
         return redirect('/', 302)
     try:
-        data = [redis[key('%s:%s:html', id, pk)] for pk in lst]
+        data = redis.mget(*[key('%s:%s:html', id, pk) for pk in lst])
     except KeyError:
         return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, redis[key('%s:1:raw', id)])
 
-    return template('show', data=data, id=id, owner=owner)
+    return template('show', data=data, id=id, owner=owner,
+                    lexer=(dict(lexerlist()))[redis[key('%s:1:lexer', id)]],
+                    date=fromepoch(redis.get(key('%s:1:date', id)) or 0))
 
 @route('/:id/edit/')
 @route('/:id/edit/', method='POST')

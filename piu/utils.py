@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 from pygments import lexers, formatters, highlight as highlight_
 
 def key(format, *args):
@@ -5,6 +6,12 @@ def key(format, *args):
 
 def dec(s):
     return s.decode('utf-8')
+
+def toepoch(dt):
+    return dt.strftime('%s')
+
+def fromepoch(s):
+    return dt.fromtimestamp(int(s))
 
 OPTIONS = {'html': {'linenos': 'table'}}
 

@@ -4,7 +4,7 @@
 
 {% block content %}
 <form action="." method="post">
-  <div id="selector">
+  <div class="meta">
     <select name="lexer" id="lexers">
       <option value="guess">Guess type</option>
       {%- for alias, name in lexers %}

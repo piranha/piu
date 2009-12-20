@@ -8,7 +8,7 @@ $(document).ready(function() {
 
     $('span.hot').click(function() {
         lexers.val($(this).attr('rel')).change();
-        $('#text').focus();o
+        $('#text').focus();
     });
 
     lexers.change();

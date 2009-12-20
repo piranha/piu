@@ -14,6 +14,7 @@
     </select>
 
     <span class="hot" rel="guess">Guess</span> |
+    <span class="hot" rel="text">Text</span> |
     <span class="hot" rel="python">Python</span> |
     <span class="hot" rel="js">JavaScript</span> |
     <span class="hot" rel="rb">Ruby</span> |

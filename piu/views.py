@@ -24,9 +24,9 @@ def paste(id, data, lexer):
 
     redis.sadd(key('%s:list', id), 1)
     redis.set(key('%s:1:raw', id), data)
+    redis.set(key('%s:1:lexer', id), lexer)
     result, lexer = highlight(data, lexer)
     redis.set(key('%s:1:html', id), result)
-    redis.set(key('%s:1:lexer', id), lexer)
     redis.set(key('%s:1:date', id), toepoch(dt.now()))
     print response.wsgiheaders()
 

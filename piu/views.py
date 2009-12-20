@@ -95,3 +95,12 @@ def edit(id):
     data = [redis[key('%s:%s:raw', id, pk)] for pk in lst][0]
     return template('index', data=data, id=id, lexers=lexerlist())
 
+@route('/piu')
+def piu():
+    lexdict = {}
+    for _, names, fnames, _ in lexers.get_all_lexers():
+        name = names[0]
+        for fn in fnames:
+            lexdict[fn] = name
+    response.content_type = 'text/plain'
+    return template('piu.py', lexers=lexdict)

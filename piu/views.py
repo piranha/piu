@@ -104,3 +104,7 @@ def piu():
             lexdict[fn] = name
     response.content_type = 'text/plain'
     return template('piu.py', lexers=lexdict)
+
+@route('/about/')
+def about():
+    return template('about')

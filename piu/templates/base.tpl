@@ -20,7 +20,10 @@
   <div id="content">{% block content %}{% endblock %}</div>
 
   <div id="footer">
-    <p>&#169; 2009 <a href="http://piranha.org.ua">Alexander Solovyov</a></p>
+    <p>
+      &#169; 2009 <a href="http://piranha.org.ua">Alexander Solovyov</a>,
+      <a href="/about/">about</a>
+    </p>
   </div>
 </body>
 </html>

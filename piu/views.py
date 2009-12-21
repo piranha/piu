@@ -68,10 +68,23 @@ def show(id):
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, redis[key('%s:1:raw', id)])
 
-    lexer=lexers.get_lexer_by_name(redis[key('%s:1:lexer', id)]).name
+    lexer = lexers.get_lexer_by_name(redis[key('%s:1:lexer', id)]).name
 
     return template('show', data=data, id=id, owner=owner, lexer=lexer,
                     date=fromepoch(redis.get(key('%s:1:date', id)) or 0))
+
+@route('/:id/raw/')
+def show_raw(id):
+    lst = redis.smembers(key('%s:list', id))
+    if not lst:
+        return redirect('/', 302)
+    try:
+        data = redis.mget(*[key('%s:%s:raw', id, pk) for pk in lst])
+    except KeyError:
+        return redirect('/', 302)
+
+    response.content_type = 'text/plain'
+    return data[0]
 
 @route('/:id/edit/')
 @route('/:id/edit/', method='POST')

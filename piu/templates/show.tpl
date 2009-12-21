@@ -2,7 +2,12 @@
 
 {% block content %}
 <div class="meta">
-{% if owner %}<a id="edit" href="/{{ id }}/edit/">edit your code</a>{% endif %}
+  <span class="right">
+    {% if owner -%}
+    <a id="edit" href="/{{ id }}/edit/">edit your code</a> |
+    {%- endif %}
+    <a href="/{{ id }}/raw/">raw</a>
+  </span>
 <span>Pasted at <time datetime="">{{ date }}</time></span> |
 <span>Highlighted as {{ lexer }}</span>
 </div>

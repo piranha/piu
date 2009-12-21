@@ -7,8 +7,11 @@
 
 <pre><code>curl -o ~/bin/piu http://paste.in.ua/piu && chmod +x ~/bin/piu</code></pre>
 
-<p>
-  Features: can determine file type by extension and automatically copy url to
-clipboard using either xclip or pbcopy (whichever is available on your system).
+<p>Features:</p>
+<ul>
+  <li>determine file type by extension</li>
+  <li>determine file type by analyzing input data</li>
+  <li>automatically copy url to clipboard using either xclip or pbcopy
+    (whichever is available on your system).</li>
 </p>
 {% endblock %}

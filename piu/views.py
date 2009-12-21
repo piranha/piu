@@ -111,12 +111,13 @@ def edit(id):
 @route('/piu')
 def piu():
     lexdict = {}
+    lexlist = []
     for _, names, fnames, _ in lexers.get_all_lexers():
-        name = names[0]
+        lexlist.extend(names)
         for fn in fnames:
-            lexdict[fn] = name
+            lexdict[fn] = names[0]
     response.content_type = 'text/plain'
-    return template('piu.py', lexers=lexdict)
+    return template('piu.py', extmap=lexdict, lexers=lexlist)
 
 @route('/about/')
 def about():

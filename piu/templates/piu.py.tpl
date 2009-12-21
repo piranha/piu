@@ -23,7 +23,7 @@ def result(url):
     utils = 'xclip pbcopy'.split()
     for util in utils:
         {# #}# not because 0 is success
-        if not os.system('which %s > /dev/null' % util):
+        if not os.system('which %s > /dev/null 2>&1' % util):
             os.system('printf %s | %s' % (url, util))
             print 'url copied to clipboard using %s' % util
 

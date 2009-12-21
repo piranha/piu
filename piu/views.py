@@ -83,7 +83,7 @@ def show_raw(id):
     except KeyError:
         return redirect('/', 302)
 
-    response.content_type = 'text/plain'
+    response.content_type = 'text/plain; charset=utf-8'
     return data[0]
 
 @route('/:id/edit/')

@@ -19,15 +19,18 @@ def findlexer(fn, default):
 def guess_lexer(data, default=None):
     lines = data.splitlines()
     {##}# shebang
-    if lines[0].startswith('#!'):
-        executable = os.path.basename(lines[0].split()[0][2:])
+    line = lines[0]
+    if line.startswith('#!'):
+        executable = os.path.basename(line.split()[0][2:])
         if executable == 'env':
-            return lines[0].split()[1]
+            return line.split()[1]
         return executable
+
     {##}# file variables appear only in first two lines of file
     for line in lines[:2]:
         if mode_re.search(line):
             return mode_re.search(line).group('mode')
+
     {##}# check if it's a diff
     probably = False
     for line in lines:

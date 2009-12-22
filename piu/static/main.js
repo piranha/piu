@@ -20,4 +20,3 @@ $(document).ready(function() {
     shortcut.add('ctrl+j', function() { lexers.focus(); });
     shortcut.add('ctrl+n', function() { document.location.href = '/'; });
 });
-

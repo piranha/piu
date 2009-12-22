@@ -56,12 +56,8 @@ def new():
 
 @route('/:id/')
 def show(id):
-    lst = redis.smembers(key('%s:list', id))
-    if not lst:
-        return redirect('/', 302)
-    try:
-        data = redis.mget(*[key('%s:%s:html', id, pk) for pk in lst])
-    except KeyError:
+    data = redis.sort(key('%s:list', id), get=key('%s:*:html', id))
+    if not data:
         return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
@@ -74,12 +70,8 @@ def show(id):
 
 @route('/:id/raw/')
 def show_raw(id):
-    lst = redis.smembers(key('%s:list', id))
-    if not lst:
-        return redirect('/', 302)
-    try:
-        data = redis.mget(*[key('%s:%s:raw', id, pk) for pk in lst])
-    except KeyError:
+    data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))
+    if not data:
         return redirect('/', 302)
 
     response.content_type = 'text/plain; charset=utf-8'
@@ -104,7 +96,7 @@ def edit(id):
         return redirect('/%s/' % id, 302)
 
     # beware of 0 here!
-    data = [redis[key('%s:%s:raw', id, pk)] for pk in lst][0]
+    data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))[0]
     return template('index', data=data, id=id, lexers=lexerlist())
 
 @route('/piu')

@@ -28,7 +28,6 @@ def paste(id, data, lexer):
     result, lexer = highlight(data, lexer)
     redis.set(key('%s:1:html', id), result)
     redis.set(key('%s:1:date', id), toepoch(dt.now()))
-    print response.wsgiheaders()
 
 @route('/static/:name#.*#')
 @route('/:name#favicon.ico#')

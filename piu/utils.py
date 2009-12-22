@@ -26,7 +26,7 @@ def highlight(code, lexer='guess', formatter='codehtml'):
     formatter = CodeHtmlFormatter(
         linenos='table', anchorlinenos=True, lineanchors='l')
 
-    return highlight_(code, lexer, formatter), lexer.name.lower()
+    return highlight_(code, lexer, formatter), lexer.aliases[0]
 
 def style():
     f = formatters.HtmlFormatter()

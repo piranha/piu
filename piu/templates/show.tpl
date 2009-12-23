@@ -14,4 +14,8 @@
 {% for code in data %}
 {{ code }}
 {% endfor %}
+
+<span class="note">Click or select some line numbers to highlight code in
+correspoding lines</span>
+
 {% endblock %}

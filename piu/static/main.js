@@ -64,9 +64,13 @@ hlter = {
 
         // yay bitwise :P
         $(window).keydown(function(event) {
-            if (app.isModifier(event.keyCode)) { app.modifier |= app.bit(event.keyCode); }
+            if (app.isModifier(event.keyCode)) {
+                app.modifier |= app.bit(event.keyCode);
+            }
         }).keyup(function(event) {
-            if (app.isModifier(event.keyCode)) { app.modifier ^= app.bit(event.keyCode); }
+            if (app.isModifier(event.keyCode)) {
+                app.modifier ^= app.bit(event.keyCode);
+            }
         });
     },
 

@@ -4,7 +4,7 @@ import os.path as op
 from opster import command
 import bottle
 from bottle import run, default_app, CherryPyServer, debug as debug_
-from redis import Redis, ConnectionError
+from pyredis import Redis, ConnectionError
 
 bottle.TEMPLATE_PATH = [op.join(op.dirname(__file__), 'templates')]
 redis = None

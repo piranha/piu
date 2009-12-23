@@ -16,6 +16,6 @@ setup(name='piu',
       install_requires=['opster', 'bottle', 'pyredis'],
       entry_points='''
       [console_scripts]
-      piu = piu:main
+      piud = piu:main
       '''
       )

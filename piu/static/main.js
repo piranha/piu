@@ -41,14 +41,13 @@ $(document).ready(function() {
 });
 
 hlter = {
-    last_location: null,
-    // if user is selecting lines, first line
-    selecting: null,
-    // if ctrl or shift is pressed
-    shift: false,
-    ctrl: false,
-    // time in ms that the URL is queried for changes
-    run_interval_every: 50,
+    last_location: null,    // what location we're following right now
+    run_interval_every: 50, // time in ms that the URL is queried for changes
+    selecting: null,        // if user is selecting lines, first line
+    modifier: 0,            // if ctrl or shift is pressed
+    // ctrl - 16, shift - 17
+    isModifier: function(code) { return [16,17].indexOf(code) + 1; },
+    bit: function(code) { return 1 << (code - 16); },
 
     run: function() {
         var app = this;
@@ -59,29 +58,29 @@ hlter = {
 
         $('.linenos a').disableTextSelect();
 
-        $('.linenos a').mousedown(function() { app.selecting = this.rel; })
-            .mouseup(function() { app.select(this.rel); app.selecting = null; });
-        $('.line').mouseup(function() { app.select(this.id); app.selecting = null; });
+        $('.linenos a').mousedown(function() { app.selectStart(this); })
+            .mouseup(function() { app.selectEnd(this); });
+        $('.line').mouseup(function() { app.selectEnd(this); });
 
+        // yay bitwise :P
         $(window).keydown(function(event) {
-            if (event.keyCode == 16) { app.shift = true; }
-            else if (event.keyCode == 17) { app.ctrl = true; }
+            if (app.isModifier(event.keyCode)) { app.modifier |= app.bit(event.keyCode); }
         }).keyup(function(event) {
-            if (event.keyCode == 16) { app.shift = false; }
-            else if (event.keyCode == 17) { app.ctrl = false; }
+            if (app.isModifier(event.keyCode)) { app.modifier ^= app.bit(event.keyCode); }
         });
     },
 
+    selectStart: function(elem) { this.selecting = elem.rel; },
+    selectEnd: function(elem) { this.select(elem.rel); this.selecting = null; },
+
     select: function(end) {
         if (!this.selecting) { return; }
-        var range;
 
+        var range = this.selecting;
         if (end && end != this.selecting)
-            { range = this.selecting + ':' + end; }
-        else
-            { range = this.selecting; }
+            { range += ':' + end; }
 
-        if ((this.ctrl || this.shift) && window.location.hash)
+        if (this.modifier && window.location.hash)
             { window.location.hash += ',' + range; }
         else
             { window.location.hash = range; }

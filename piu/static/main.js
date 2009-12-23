@@ -14,7 +14,7 @@ $(document).ready(function() {
     lexers.change();
 
     shortcut.add('ctrl+enter', function() {
-        if (!$('#text').val()) return;
+        if (!$('#text').val()) { return; }
         $('form').submit();
     });
     shortcut.add('ctrl+j', function() { lexers.focus(); });
@@ -24,7 +24,7 @@ $(document).ready(function() {
     $('.linenos a').each(function() {
         this.rel = this.href.split('#')[1];
         this.removeAttribute('href');
-    })
+    });
 
     hlter.run();
 
@@ -57,59 +57,57 @@ hlter = {
             app.check.apply(app);
         }, this.run_interval_every);
 
+        $('.linenos a').disableTextSelect();
+
         $('.linenos a').mousedown(function() { app.selecting = this.rel; })
-            .mouseup(function() { app.select(this.rel); });
-        $('.line').mouseup(function() { app.select(this.id); });
+            .mouseup(function() { app.select(this.rel); app.selecting = null; });
+        $('.line').mouseup(function() { app.select(this.id); app.selecting = null; });
 
         $(window).keydown(function(event) {
-            if (event.keyCode == 16) app.shift = true;
-            if (event.keyCode == 17) app.ctrl = true;
+            if (event.keyCode == 16) { app.shift = true; }
+            else if (event.keyCode == 17) { app.ctrl = true; }
         }).keyup(function(event) {
-            if (event.keyCode == 16) app.shift = false;
-            if (event.keyCode == 17) app.ctrl = false;
+            if (event.keyCode == 16) { app.shift = false; }
+            else if (event.keyCode == 17) { app.ctrl = false; }
         });
     },
 
     select: function(end) {
-        if (!this.selecting) return;
+        if (!this.selecting) { return; }
+        var range;
 
         if (end && end != this.selecting)
-            var range = this.selecting + ':' + end
+            { range = this.selecting + ':' + end; }
         else
-            var range = this.selecting;
+            { range = this.selecting; }
 
         if ((this.ctrl || this.shift) && window.location.hash)
-            window.location.hash += ',' + range;
+            { window.location.hash += ',' + range; }
         else
-            window.location.hash = range;
-
-        if (window.getSelection)
-            window.getSelection().removeAllRanges();
-        else
-            document.selection.createRange(); // no idea how to clear it
+            { window.location.hash = range; }
     },
 
     perform: function() {
         $('.line').removeClass('selected');
         var specifiers = this.location().split(',');
 
-        for (k in specifiers) {
+        for (k in specifiers) { if (specifiers.hasOwnProperty(k)) {
             var pair = specifiers[k].split(':');
-            if (!(pair.length == 2))
-                pair[1] = pair[0];
+            if (pair.length != 2)
+                { pair[1] = pair[0]; }
 
             start = this.int(pair[0]); end = this.int(pair[1]);
             if (start > end)
-                end = (start += end -= start) - end; // swap variables
+                { end = (start += end -= start) - end; } // swap variables
 
             for (i = start; i <= end; i += 1) {
                 $('#l-' + i).addClass('selected');
-            }
+            } }
         }
     },
 
     int: function(s) {
-        return parseInt(s.split('-')[1]);
+        return parseInt(s.split('-')[1], 10);
     },
 
     location: function() {
@@ -122,5 +120,31 @@ hlter = {
             this.last_location = location;
             this.perform();
         }
-    },
-}
+    }
+};
+
+/* .disableTextSelect, version 1.2
+   Copyright (c) 2007 James Dempster
+   Copyright (c) 2009 Alexander Solovyov
+   under terms of MIT License
+ */
+(function($) {
+    if ($.browser.mozilla) {
+        $.fn.disableTextSelect = function() {
+            return this.each(function() { $(this).css({'MozUserSelect' : 'none'}); });
+        };
+        $.fn.enableTextSelect = function() {
+            return this.each(function() { $(this).css({'MozUserSelect' : ''}); });
+        };
+    } else {
+        var tgt = ($.browser.msie ? 'selectstart' : 'mousedown')+'.disableTextSelect';
+        $.fn.disableTextSelect = function() {
+            return this.each(function() {
+                $(this).bind(tgt, function() { return false; });
+            });
+        };
+        $.fn.enableTextSelect = function() {
+            return this.each(function() { $(this).unbind(tgt); });
+        };
+    }
+})(jQuery);

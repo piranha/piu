@@ -14,13 +14,16 @@ from piu.utils import toepoch, fromepoch
 cookie = {'expires': 60*60*24*30*12}
 
 def sign(id, data):
-    return sha1(str(id) + data.encode('utf-8')).hexdigest()
+    return sha1(str(id) + data).hexdigest()
 
 def paste(id, data, lexer):
     '''actually paste data in redis'''
-    response.set_cookie('lexer', lexer, **cookie)
-    # BUG: this does not override old cookie
-    response.set_cookie('edit-%s' % id, sign(id, data), **cookie)
+    try:
+        response.set_cookie('lexer', lexer, **cookie)
+        # BUG: this does not override old cookie
+        response.set_cookie('edit-%s' % id, sign(id, data), **cookie)
+    except AttributeError:
+        pass
 
     redis.sadd(key('%s:list', id), 1)
     redis.set(key('%s:1:raw', id), data)
@@ -28,6 +31,16 @@ def paste(id, data, lexer):
     redis.set(key('%s:1:lexer', id), lexer)
     redis.set(key('%s:1:html', id), result)
     redis.set(key('%s:1:date', id), toepoch(dt.now()))
+
+def regenerate():
+    for k in redis.keys(key('*:list')):
+        id = k.split(':')[1]
+        data = redis.get(key('%s:1:raw', id))
+        if not data:
+            continue
+        data = data.decode('utf-8')
+        lexer = redis.get(key('%s:1:lexer', id))
+        paste(id, data, lexer)
 
 @route('/static/:name#.*#')
 @route('/:name#favicon.ico#')
@@ -59,6 +72,7 @@ def show(id):
     data = redis.sort(key('%s:list', id), get=key('%s:*:html', id))
     if not data:
         return redirect('/', 302)
+    data = [x.decode('utf-8') for x in data]
 
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, redis[key('%s:1:raw', id)])

@@ -4,7 +4,7 @@ import os.path as op
 from opster import command
 import bottle
 from bottle import run, default_app, CherryPyServer, debug as debug_
-from redis import Redis, ConnectionError
+from pyredis import Redis, ConnectionError
 
 bottle.TEMPLATE_PATH = [op.join(op.dirname(__file__), 'templates')]
 redis = None
@@ -28,7 +28,8 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
          debug      = ('d', False, 'enable debug'),
          redis_host = ('', 'localhost', 'host of redis'),
          redis_port = ('', 6379, 'port of redis'),
-         db         = ('', 8, 'redis db number')):
+         db         = ('', 8, 'redis db number'),
+         regenerate = ('', False, 'regenerate *:html in database')):
     '''paste.in.ua
     '''
     try:
@@ -41,6 +42,10 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
 
     # import views to register them
     import views
+
+    if regenerate:
+        views.regenerate()
+        sys.exit()
 
     kwargs = not debug and {'server': CherryPyServer} or {}
     app = pathmw(default_app())

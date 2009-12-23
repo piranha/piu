@@ -18,6 +18,8 @@ input[type="submit"] { font-size: 1.5em; width: 5em; }
 #text, .highlighttable { font-family: Monaco, Consolas, 'Courier New', monospace;
                          font-size: 1.1em; }
 
+.highlighttable pre { font-family: Monaco; }
+
 td.linenos { width: 1px; }
 .linenos a { cursor: pointer; background-color: #f5f5f5;
            text-decoration: none; color: black; }

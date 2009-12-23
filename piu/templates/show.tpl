@@ -8,7 +8,7 @@
     {%- endif %}
     <a href="/{{ id }}/raw/">raw</a>
   </span>
-<span>Pasted at <time datetime="{{ date.isoformat }}">{{ date }}</time></span> |
+<span>Pasted at <time datetime="{{ date.isoformat() }}">{{ date }}</time></span> |
 <span>Highlighted as {{ lexer }}</span>
 </div>
 {% for code in data %}

@@ -54,19 +54,24 @@ hlter = {
             app.check.apply(app);
         }, this.run_interval_every);
 
-        $('.linenos a').mousedown(function() {
-            app.selecting = this.rel;
-        }).mouseup(function() {
-            window.location.hash = '#' + app.selecting + ':' + this.rel;
-            app.selecting = null;
+        $('.linenos a').mousedown(function() { app.selecting = this.rel; })
+            .mouseup(function() { app.select(this.rel); });
+        $('.line').mouseup(function() { app.select(this.id); });
+    },
 
-            if (window.getSelection) {
-                window.getSelection().removeAllRanges();
-            } else {
-                // no idea how to clear it
-                document.selection.createRange();
-            }
-        });
+    select: function(anchor) {
+        if (!this.selecting) return;
+
+        var range = this.selecting + ':' + anchor;
+        window.location.hash = '#' + range;
+        this.selecting = null;
+
+        if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+        } else {
+            // no idea how to clear it
+            document.selection.createRange();
+        }
     },
 
     perform: function() {

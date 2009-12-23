@@ -30,15 +30,23 @@ $(document).ready(function() {
 
     // highlight hovered lines
     $('.line').hover(
-        function() { $(this).addClass('over'); },
-        function() { $(this).removeClass('over'); }
+        function() { $(line(this.id)).addClass('over'); },
+        function() { $(line(this.id)).removeClass('over'); }
         );
     $('.linenos a').hover(
-        function() { $('#' + this.rel).addClass('over'); },
-        function() { $('#' + this.rel).removeClass('over'); }
+        function() { $(line(this.rel)).addClass('over'); },
+        function() { $(line(this.rel)).removeClass('over'); }
         );
 
 });
+
+function line(id) {
+    if (id.toString().indexOf('-') + 1) { // that's l-num
+        return '#' + id + ', .linenos a[rel=' + id + ']';
+    } else {
+        return '#l-' + id + ', .linenos a[rel=l-' + id + ']';
+    }
+};
 
 hlter = {
     last_location: null,    // what location we're following right now
@@ -91,7 +99,7 @@ hlter = {
     },
 
     perform: function() {
-        $('.line').removeClass('selected');
+        $('.line, .linenos a').removeClass('selected');
         var specifiers = this.location().split(',');
 
         for (k in specifiers) { if (specifiers.hasOwnProperty(k)) {
@@ -104,7 +112,8 @@ hlter = {
                 { end = (start += end -= start) - end; } // swap variables
 
             for (i = start; i <= end; i += 1) {
-                $('#l-' + i).addClass('selected');
+                console.log(line(i));
+                $(line(i)).addClass('selected');
             } }
         }
     },

@@ -17,15 +17,17 @@ input[type="submit"] { font-size: 1.5em; width: 5em; }
 .highlighttable pre { line-spacing: 125%; } /* fix ie */
 .highlighttable { border-spacing: 0; width: 100%; }
 
-.highlighttable pre, textarea, code {
+td.linenos, pre, textarea, code {
     font-family: Monaco, Consolas, 'Courier New', monospace; font-size: 0.8em; }
 
+td { padding: 1px 0; }
 td.linenos { width: 1px; }
-.linenos a { cursor: pointer; background-color: #f5f5f5;
-           text-decoration: none; color: black; }
+.linenos a { cursor: pointer; background-color: #f5f5f5; text-align: right;
+             text-decoration: none; color: black; display: block;
+             padding: 0 0.3em;}
 .line { width: 100%; padding-left: 1em; }
-.line.over { background-color: #ffffe3; }
-.line.selected { background-color: #fafab0; }
+.line.over, .linenos a.over { background-color: #ffffe3; }
+.line.selected, .linenos a.selected { background-color: #fafab0; }
 
 .meta { background-color: #f5f5f5; padding: 0.5em;
         border-top: 1px dashed #bbb; border-bottom: 1px dashed #bbb; }

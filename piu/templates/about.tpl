@@ -3,7 +3,7 @@
 {% block content %}
 <p>That's a simple pastebin, don't hesitate to use it. ;-)</p>
 
-<h3>Selections</h3>
+<h3 id="selections">Selections</h3>
 
 <p>This is neat unique feature - if you have "#l-num" in url, corresponding line
   will be highlighted. Of course, you can get such url just by clicking on line
@@ -15,7 +15,7 @@
   them by ",". Unfortunately there is no interface to get few ranges, but there
   is possibility that I'll work on that sooner or later. ;-) Enjoy!</p>
 
-<h3>API</h3>
+<h3 id="api">API</h3>
 
 <p>
   API is dead simple, it's just a POST request to a "http://paste.in.ua/" with
@@ -23,7 +23,7 @@
   default to "guess".
 </p>
 
-<h3>Tools</h3>
+<h3 id="tools">Ready tools</h3>
 
 <p>There is command-line <a href="/piu">utility</a>, fetch it like that:</p>
 

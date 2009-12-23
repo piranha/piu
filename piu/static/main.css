@@ -16,7 +16,7 @@ input[type="submit"] { font-size: 1.5em; width: 5em; }
 .highlighttable pre { line-spacing: 125%; } /* fix ie */
 .highlighttable { border-spacing: 1em 0; width: 100%; }
 
-.highlighttable pre, #text {
+.highlighttable pre, textarea, code {
     font-family: Monaco, Consolas, 'Courier New', monospace; font-size: 0.8em; }
 
 td.linenos { width: 1px; }

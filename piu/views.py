@@ -21,7 +21,7 @@ def paste(id, data, lexer):
     try:
         response.set_cookie('lexer', lexer, **cookie)
         # BUG: this does not override old cookie
-        response.set_cookie('edit-%s' % id, sign(id, data), **cookie)
+        response.set_cookie('edit-%s' % id, sign(id, data.encode('utf-8')), **cookie)
     except AttributeError:
         pass
 

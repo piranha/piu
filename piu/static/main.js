@@ -42,8 +42,11 @@ $(document).ready(function() {
 
 hlter = {
     last_location: null,
-    // if user is selecting lines right now, first element
+    // if user is selecting lines, first line
     selecting: null,
+    // if ctrl or shift is pressed
+    shift: false,
+    ctrl: false,
     // time in ms that the URL is queried for changes
     run_interval_every: 50,
 
@@ -57,33 +60,45 @@ hlter = {
         $('.linenos a').mousedown(function() { app.selecting = this.rel; })
             .mouseup(function() { app.select(this.rel); });
         $('.line').mouseup(function() { app.select(this.id); });
+
+        $(window).keydown(function(event) {
+            if (event.keyCode == 16) app.shift = true;
+            if (event.keyCode == 17) app.ctrl = true;
+        }).keyup(function(event) {
+            if (event.keyCode == 16) app.shift = false;
+            if (event.keyCode == 17) app.ctrl = false;
+        });
     },
 
     select: function(anchor) {
         if (!this.selecting) return;
 
         var range = this.selecting + ':' + anchor;
-        window.location.hash = '#' + range;
+        if ((this.ctrl || this.shift) && window.location.hash)
+            window.location.hash += ',' + range;
+        else
+            window.location.hash = range;
         this.selecting = null;
 
-        if (window.getSelection) {
+        if (window.getSelection)
             window.getSelection().removeAllRanges();
-        } else {
-            // no idea how to clear it
-            document.selection.createRange();
-        }
+        else
+            document.selection.createRange(); // no idea how to clear it
     },
 
     perform: function() {
         $('.line').removeClass('selected');
         var specifiers = this.location().split(',');
+
         for (k in specifiers) {
             var pair = specifiers[k].split(':');
             if (!(pair.length == 2))
                 pair[1] = pair[0];
+
             start = this.int(pair[0]); end = this.int(pair[1]);
             if (start > end)
                 end = (start += end -= start) - end; // swap variables
+
             for (i = start; i <= end; i += 1) {
                 $('#l-' + i).addClass('selected');
             }

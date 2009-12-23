@@ -8,13 +8,14 @@
 <p>This is neat unique feature - if you have <code>'#l-num'</code> in url,
   corresponding line will be highlighted. Of course, you can get such url just
   by clicking on line number.</p>
-<p>But more than that, if you will try to select some line numbers with mouse,
-  you'll end with something like <code>'#l-num1:l-num2'</code> in url and
-  corresponding lines highlighted.</p>
-<p>And finally, you can supply few such ranges (and single lines) separating
-  them by <code>','</code>. Unfortunately there is no interface to get few
-  ranges, but there is possibility that I'll work on that sooner or later. ;-)
-  Enjoy!</p>
+<p>But more than that, if you will try to select some line numbers with mouse
+  (it's ok to finish selection on line itself, not on line number), you'll end
+  with something like <code>'#l-num1:l-num2'</code> in url and corresponding
+  lines highlighted.</p>
+<p>And finally, we've got an awesome feature - you can select few such ranges
+  (or supply them by hands in URL, of course ;-). Just press and hold Control or
+  Shift when selecting new range and instead of replacing it will be added to
+  your current ranges</p>
 
 <h3 id="api">API</h3>
 

@@ -9,14 +9,14 @@ LEXERS = {{ lexers }}
 URI = 'http://paste.in.ua/'
 mode_re = re.compile('-\*-.*mode: (?P<mode>[\w\.\-]+).*-\*-', re.I)
 
-def findlexer(fn, default):
+def findlexer(fn, default=None):
     fn = os.path.basename(fn)
     for pat, lexer in EXTMAP.items():
         if fnmatch(fn, pat):
             return lexer
     return default
 
-def guess_lexer(data, default=None):
+def guess_lexer(data, default):
     lines = data.splitlines()
     {##}# shebang
     line = lines[0]

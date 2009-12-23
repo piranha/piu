@@ -20,12 +20,13 @@ $(document).ready(function() {
     shortcut.add('ctrl+j', function() { lexers.focus(); });
     shortcut.add('ctrl+n', function() { document.location.href = '/'; });
 
+    // links do not work with selections
     $('.linenos a').each(function() {
         this.rel = this.href.split('#')[1];
         this.removeAttribute('href');
-    }).click(function() {
-        window.location.hash = '#' + this.rel;
-    });
+    })
+
+    hlter.run();
 
     // highlight hovered lines
     $('.line').hover(
@@ -37,7 +38,6 @@ $(document).ready(function() {
         function() { $('#' + this.rel).removeClass('over'); }
         );
 
-    hlter.run();
 });
 
 hlter = {
@@ -70,15 +70,18 @@ hlter = {
         });
     },
 
-    select: function(anchor) {
+    select: function(end) {
         if (!this.selecting) return;
 
-        var range = this.selecting + ':' + anchor;
+        if (end && end != this.selecting)
+            var range = this.selecting + ':' + end
+        else
+            var range = this.selecting;
+
         if ((this.ctrl || this.shift) && window.location.hash)
             window.location.hash += ',' + range;
         else
             window.location.hash = range;
-        this.selecting = null;
 
         if (window.getSelection)
             window.getSelection().removeAllRanges();

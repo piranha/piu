@@ -5,7 +5,7 @@ img { border: 0; }
 header, #content { margin: 0 auto; width: 90%; }
 header h1 { margin: 0.3em 5%; font-size: 3em;
             font-family: Helvetica, sans-serif; }
-header h1 a { text-decoration: none; color: black; }
+h1 a, h2 a, h3 a { text-decoration: none; color: black; }
 p { line-height: 1.2em; }
 
 .hot.selected { border-bottom: none; }

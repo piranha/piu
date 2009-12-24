@@ -3,7 +3,7 @@
 {% block content %}
 <p>That's a simple pastebin, don't hesitate to use it. ;-)</p>
 
-<h3 id="selections">Selections</h3>
+<h3 id="selections"><a href="#selections">Selections</a></h3>
 
 <p>This is neat unique feature - if you have <code>'#l-num'</code> in url,
   corresponding line will be highlighted. Of course, you can get such url just
@@ -17,7 +17,7 @@
   Shift when selecting new range and instead of replacing it will be added to
   your current ranges</p>
 
-<h3 id="api">API</h3>
+<h3 id="api"><a href="#api">API</a></h3>
 
 <p>
   API is dead simple, it's just a POST request to
@@ -26,7 +26,7 @@
   default to <code>'guess'</code>.
 </p>
 
-<h3 id="tools">Ready tools</h3>
+<h3 id="tools"><a href="#tools">Ready tools</a></h3>
 
 <p>There is command-line <a href="/piu">utility</a>, fetch it like that:</p>
 

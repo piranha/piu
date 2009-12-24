@@ -20,6 +20,7 @@ input[type="submit"] { font-size: 1.5em; width: 5em; }
 
 td.linenos, pre, textarea, code {
     font-family: Monaco, Consolas, 'Courier New', monospace; font-size: 0.8em; }
+code { font-size: 1em; }
 
 td { padding: 1px 0; }
 td.linenos { width: 1px; }

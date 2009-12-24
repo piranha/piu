@@ -52,6 +52,7 @@ hlter = {
     last_location: null,    // what location we're following right now
     run_interval_every: 50, // time in ms that the URL is queried for changes
     selecting: null,        // if user is selecting lines, first line
+    current: null,          // current line or line number if any
     modifier: 0,            // if ctrl or shift is pressed
     // ctrl - 16, shift - 17
     isModifier: function(code) { return [16,17].indexOf(code) + 1; },
@@ -69,6 +70,11 @@ hlter = {
         $('.linenos a').mousedown(function() { app.selectStart(this.rel); })
             .mouseup(function() { app.selectEnd(this.rel); });
         $('.line').mouseup(function() { app.selectEnd(this.id); });
+
+        // $('.line, .linenos a').mouseenter(function() { app.current = this; })
+        //     .mouseleave(function() { if (app.current == this) { app.current = null; } });
+        $('.line').mousemove(function() { app.current = this.id; })
+        $('.linenos a').mousemove(function() { app.current = this.rel; })
 
         // yay bitwise :P
         $(window).keydown(function(event) {
@@ -98,7 +104,17 @@ hlter = {
             { window.location.hash = range; }
     },
 
-    perform: function() {
+    ongoingselection: function() {
+        $('.linenos a').removeClass('selecting');
+        if (!(this.selecting && this.current)) { return; }
+        var pair = this.startend([this.selecting, this.current]);
+
+        for (var i = pair[0]; i <= pair[1]; i += 1) {
+            $('.linenos a[rel=l-' + i + ']').addClass('selecting');
+        }
+    },
+
+    lineselection: function() {
         $('.line, .linenos a').removeClass('selected');
         var specifiers = this.location().split(',');
 
@@ -106,20 +122,25 @@ hlter = {
             var pair = specifiers[k].split(':');
             if (pair.length != 2)
                 { pair[1] = pair[0]; }
+            pair = this.startend(pair);
 
-            start = this.int(pair[0]); end = this.int(pair[1]);
-            if (start > end)
-                { end = (start += end -= start) - end; } // swap variables
-
-            for (i = start; i <= end; i += 1) {
-                console.log(line(i));
+            for (var i = pair[0]; i <= pair[1]; i += 1) {
                 $(line(i)).addClass('selected');
-            } }
-        }
+            }
+        } }
     },
 
     int: function(s) {
         return parseInt(s.split('-')[1], 10);
+    },
+
+    startend: function(pair) {
+        self = this;
+        pair = $.map(pair, function(x) { return self.int(x); });
+        if (pair[0] > pair[1])
+            { return [pair[1], pair[0]]; }
+        console.log(pair);
+        return pair;
     },
 
     location: function() {
@@ -127,10 +148,11 @@ hlter = {
     },
 
     check: function() {
+        this.ongoingselection();
         var location = this.location();
         if (location != this.last_location) {
             this.last_location = location;
-            this.perform();
+            this.lineselection();
         }
     }
 };

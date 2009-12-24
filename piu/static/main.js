@@ -139,7 +139,6 @@ hlter = {
         pair = $.map(pair, function(x) { return self.int(x); });
         if (pair[0] > pair[1])
             { return [pair[1], pair[0]]; }
-        console.log(pair);
         return pair;
     },
 

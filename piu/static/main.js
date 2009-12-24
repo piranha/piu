@@ -66,9 +66,9 @@ hlter = {
 
         $('.linenos a').disableTextSelect();
 
-        $('.linenos a').mousedown(function() { app.selectStart(this); })
-            .mouseup(function() { app.selectEnd(this); });
-        $('.line').mouseup(function() { app.selectEnd(this); });
+        $('.linenos a').mousedown(function() { app.selectStart(this.rel); })
+            .mouseup(function() { app.selectEnd(this.rel); });
+        $('.line').mouseup(function() { app.selectEnd(this.id); });
 
         // yay bitwise :P
         $(window).keydown(function(event) {
@@ -82,8 +82,8 @@ hlter = {
         });
     },
 
-    selectStart: function(elem) { this.selecting = elem.rel; },
-    selectEnd: function(elem) { this.select(elem.rel); this.selecting = null; },
+    selectStart: function(id) { this.selecting = id; },
+    selectEnd: function(id) { this.select(id); this.selecting = null; },
 
     select: function(end) {
         if (!this.selecting) { return; }
@@ -102,7 +102,7 @@ hlter = {
         $('.line, .linenos a').removeClass('selected');
         var specifiers = this.location().split(',');
 
-        for (k in specifiers) { if (specifiers.hasOwnProperty(k)) {
+        for (var k in specifiers) { if (specifiers.hasOwnProperty(k)) {
             var pair = specifiers[k].split(':');
             if (pair.length != 2)
                 { pair[1] = pair[0]; }

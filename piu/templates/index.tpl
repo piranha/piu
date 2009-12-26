@@ -25,10 +25,16 @@
   </div>
 
   <div>
-    <textarea id="text" name="data" rows="20" cols="120">{{ data }}</textarea>
+    <textarea id="text" name="data" rows="20" cols="120" autofocus>{{ data }}</textarea>
   </div>
   <input type="submit" value="Paste!">
   <span class="note">(or press Ctrl-Enter)</span>
 </form>
-<script>document.getElementById("text").focus();</script>
+<script>
+  $(document).ready(function() {
+      if (!("autofocus" in document.createElement("input"))) {
+          document.getElementById("text").focus();
+      }
+  });
+</script>
 {% endblock %}

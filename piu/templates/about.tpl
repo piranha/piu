@@ -22,7 +22,7 @@
 <p>
   API is dead simple, it's just a POST request to
   a <code>'http://paste.in.ua/'</code> with single required parameter -
-  <code>'data'</code>. Supply a <code>'lexer'</code> to choose a lexer, it's
+  <code>'data'</code>. Supply a <code>'lexer'</code> to choose a lexer; it's
   default to <code>'guess'</code>.
 </p>
 

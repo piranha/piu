@@ -15,6 +15,6 @@
 {{ code }}
 {% endfor %}
 
-<span class="note">&uarr; Click to highlight, select to highlight range</span>
+<span class="note">&uarr; Click line number to highlight, select to highlight range</span>
 
 {% endblock %}

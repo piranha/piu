@@ -28,7 +28,8 @@
     (c++-mode . "cpp")
     (conf-windows-mode . "ini")
     (conf-unix-mode . "ini")
-    (cs-mode . "csharp")))
+    (cs-mode . "csharp")
+    (js2-mode . "js")))
 
 (defun piu ()
   "Paste either buffer or region if active"
@@ -40,7 +41,8 @@
           (format "lexer=%s&data=%s"
                   (url-hexify-string
                    (or (assoc-default major-mode piu-types)
-                       (substring (symbol-name major-mode) 0 -5)))
+                       (replace-in-string
+                        (substring (symbol-name major-mode) 0 -5) "-" "")))
                   (url-hexify-string
                    (buffer-substring-no-properties (car region) (cdr region))))))
     (url-retrieve piu-url

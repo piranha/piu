@@ -1,4 +1,5 @@
-;;; piu.el - interface to paste.in.ua {# -*- mode: emacs-lisp -*- #}
+;;; piu.el - interface to paste.in.ua
+;;; -*- mode: emacs-lisp -*-
 
 ;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
 

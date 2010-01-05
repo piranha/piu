@@ -51,7 +51,9 @@
                      ((equal :redirect (car arg))
                       (with-temp-buffer
                         (insert (cadr arg))
-                        (clipboard-kill-ring-save (point-min) (point-max)))))))))
+                        (clipboard-kill-ring-save (point-min) (point-max))
+                        (message "%s, copied to clipboard"
+                                 (buffer-substring-no-properties (point-min) (point-max))))))))))
 
 (provide 'piu)
 ;;; piu.el ends here

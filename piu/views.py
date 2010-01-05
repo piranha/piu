@@ -124,6 +124,11 @@ def piu():
     response.content_type = 'text/plain'
     return template('piu.py', extmap=lexdict, lexers=lexlist)
 
+@route('/piu.el')
+def piuel():
+    response.content_type = 'text/plain'
+    return template('piu.el')
+
 @route('/about/')
 def about():
     return template('about')

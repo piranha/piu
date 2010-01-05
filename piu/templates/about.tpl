@@ -3,7 +3,7 @@
 {% block content %}
 <p>That's a simple pastebin, don't hesitate to use it. ;-)</p>
 
-<h3 id="selections"><a href="#selections">Selections</a></h3>
+<h2 id="selections"><a href="#selections">Selections</a></h2>
 
 <p>This is neat unique feature - if you have <code>'#l-num'</code> in url,
   corresponding line will be highlighted. Of course, you can get such url just
@@ -17,7 +17,7 @@
   Shift when selecting new range and instead of replacing it will be added to
   your current ranges</p>
 
-<h3 id="api"><a href="#api">API</a></h3>
+<h2 id="api"><a href="#api">API</a></h2>
 
 <p>
   API is dead simple, it's just a POST request to
@@ -26,9 +26,11 @@
   default to <code>'guess'</code>.
 </p>
 
-<h3 id="tools"><a href="#tools">Ready tools</a></h3>
+<h2 id="tools"><a href="#tools">Tools</a></h2>
 
-<p>There is command-line <a href="/piu">utility</a>, fetch it like that:</p>
+<h3 id="piu"><a href="#piu">Command line</a></h2>
+
+<p>You can fetch command-line <a href="/piu">utility</a> like that:</p>
 
 <pre><code>curl -o ~/bin/piu http://paste.in.ua/piu && chmod +x ~/bin/piu</code></pre>
 
@@ -38,5 +40,19 @@
   <li>determine file type by analyzing input data</li>
   <li>automatically copy url to clipboard using either xclip or pbcopy
     (whichever is available on your system).</li>
-</p>
+</ul>
+
+<p>Usage:</p>
+
+<pre><code>&gt; piu somefile.py
+&gt; cat file | piu
+&gt; hg export tip | piu
+</code></pre>
+
+<h3 id="piu-el"><a href="#piu-el">Emacs</a></h3>
+
+<p>Also we have small nice <a href="/piu.el">piece of code</a> for Emacs;
+download and put it somewhere in your Emacs' <code>'load-path'</code>. Comments
+about usage are inside a file itself.</p>
+
 {% endblock %}

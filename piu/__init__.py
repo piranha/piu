@@ -47,7 +47,7 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
         views.regenerate()
         sys.exit()
 
-    kwargs = not debug and {'server': CherryPyServer} or {}
+    kwargs = {'server': CherryPyServer}
     app = pathmw(default_app())
     if debug:
         debug_()

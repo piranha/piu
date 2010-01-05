@@ -6,6 +6,11 @@ import os, sys, urllib, re
 
 EXTMAP = {{ extmap }}
 LEXERS = {{ lexers }}
+LEXERMAP = {'emacs-lisp': 'common-lisp',
+            'scheme': 'common-lisp',
+            'nxml': 'xml',
+            'c++': 'cpp'}
+
 URI = 'http://paste.in.ua/'
 mode_re = re.compile('-\*-.*mode: (?P<mode>[\w\.\-]+).*-\*-', re.I)
 
@@ -19,7 +24,11 @@ def findlexer(fn, default=None):
 def guess_lexer(data, default):
     lines = data.splitlines()
     {##}# shebang
-    line = lines[0]
+    try:
+        line = lines[0]
+    except IndexError:
+        print 'abort: no data'
+        sys.exit(1)
     if line.startswith('#!'):
         executable = os.path.basename(line.split()[0][2:])
         if executable == 'env':
@@ -29,7 +38,8 @@ def guess_lexer(data, default):
     {##}# file variables appear only in first two lines of file
     for line in lines[:2]:
         if mode_re.search(line):
-            return mode_re.search(line).group('mode')
+            mode = mode_re.search(line).group('mode')
+            return LEXERMAP.get(mode, mode)
 
     {##}# check if it's a diff
     probably = False

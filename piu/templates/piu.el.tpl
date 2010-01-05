@@ -1,12 +1,12 @@
 ;;; piu.el - interface to paste.in.ua {# -*- mode: emacs-lisp -*- #}
 
-;;; Copyright (c) 2009 Alexander Solovyov under new BSD License
+;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
 
 ;;; Commentary:
 ;;;
 ;;; Add autoload to your configuration file:
 ;;;
-;;;    (autoload 'piu "piu" "paste buffer or region")
+;;;    (autoload 'piu "piu" "paste buffer or region" t)
 ;;;
 ;;; And then use it like "M-x piu" or add a shortcut:
 ;;;

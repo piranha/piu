@@ -15,6 +15,7 @@
 {{ code }}
 {% endfor %}
 
-<span class="note">&uarr; Click line number to highlight, drag to highlight range</span>
+<span class="note">&uarr; Click line number to highlight;
+  drag to highlight range; hold shift to select few</span>
 
 {% endblock %}

@@ -28,7 +28,7 @@
 
 <h2 id="tools"><a href="#tools">Tools</a></h2>
 
-<h3 id="piu"><a href="#piu">Command line</a></h2>
+<h3 id="piu"><a href="#piu">Command line</a></h3>
 
 <p>You can fetch command-line <a href="/piu">utility</a> like that:</p>
 

@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var lexers = $('#lexers');
+    var text = $('#text');
 
     lexers.change(function() {
         $('.hot').removeClass('selected');
@@ -8,10 +9,15 @@ $(document).ready(function() {
 
     $('span.hot').click(function() {
         lexers.val($(this).attr('rel')).change();
-        $('#text').focus();
+        text.focus();
     });
 
     lexers.change();
+
+    // resize textarea to fill maximum area without adding a scrollbar
+    var newheight = $(window).height() - $('html').height() + text.height();
+    if (newheight > text.height())
+        text.height(newheight);
 
     shortcut.add('ctrl+enter', function() {
         if (!$('#text').val()) { return; }

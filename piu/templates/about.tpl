@@ -17,6 +17,21 @@
   Shift when selecting new range and instead of replacing it will be added to
   your current ranges</p>
 
+<h2 id="shortcuts"><a href="#shortcuts">Shortcuts</a></h2>
+
+<p>There are few shortcuts for convenience:</p>
+
+<dl>
+  <dt>Ctrl-Enter</dt>
+  <dd>Create a paste (but only if textarea is not empty)</dd>
+
+  <dt>Ctrl-J</dt>
+  <dd>Jump to a lexer selection</dd>
+
+  <dt>Ctrl-N</dt>
+  <dd>Create new paste</dd>
+</dl>
+
 <h2 id="api"><a href="#api">API</a></h2>
 
 <p>

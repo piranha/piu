@@ -136,13 +136,13 @@ hlter = {
         } }
     },
 
-    int: function(s) {
+    parseInt: function(s) {
         return parseInt(s.split('-')[1], 10);
     },
 
     startend: function(pair) {
         self = this;
-        pair = $.map(pair, function(x) { return self.int(x); });
+        pair = $.map(pair, function(x) { return self.parseInt(x); });
         if (pair[0] > pair[1])
             { return [pair[1], pair[0]]; }
         return pair;

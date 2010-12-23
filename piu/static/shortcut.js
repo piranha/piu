@@ -47,7 +47,7 @@ shortcut = {
 			var character = String.fromCharCode(code).toLowerCase();
 			
 			if(code == 188) character=","; //If the user presses , when the type is onkeydown
-			if(code == 190) character="."; //If the user presses , when the type is onkeydown
+			if(code == 190) character="."; //If the user presses . when the type is onkeydown
 
 			var keys = shortcut_combination.split("+");
 			//Key Pressed - counts the number of valid keypresses - if it is same as the number of keys, the shortcut function is invoked

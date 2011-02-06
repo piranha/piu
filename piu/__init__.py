@@ -32,10 +32,10 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
          regenerate = ('', False, 'regenerate *:html in database')):
     '''paste.in.ua
     '''
+    global redis
+    redis = Redis(host=redis_host, port=redis_port, db=db)
     try:
-        global redis
-        redis = Redis(host=redis_host, port=redis_port, db=db)
-        redis.connect()
+        redis.ping()
     except ConnectionError, e:
         sys.stderr.write('redis: %s\n' % e)
         sys.exit(1)

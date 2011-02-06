@@ -3,7 +3,7 @@ import os.path as op
 
 from opster import command
 import bottle
-from bottle import run, default_app, CherryPyServer, debug as debug_
+from bottle import run, default_app, debug as debug_, PasteServer
 from redis import Redis, ConnectionError
 
 bottle.TEMPLATE_PATH = [op.join(op.dirname(__file__), 'templates')]
@@ -47,12 +47,12 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
         views.regenerate()
         sys.exit()
 
-    kwargs = {'server': CherryPyServer}
+    kwargs = {'server': PasteServer}
     app = pathmw(default_app())
     if debug:
         debug_()
     sys.exit(run(app=app, host=address, port=port, reloader=reloader,
-                 debug=debug, **kwargs))
+                 **kwargs))
 
 if __name__ == '__main__':
     main()

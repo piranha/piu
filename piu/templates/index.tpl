@@ -1,7 +1,5 @@
 {% extends "base" %} -*- mode: django-html -*-
 
-{% set deflexer = request.COOKIES.get("lexer", "guess") %} 
-
 {% block content %}
 <form action="." method="post">
   <div class="meta">

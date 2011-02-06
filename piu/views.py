@@ -1,4 +1,3 @@
-import uuid
 import os.path as op
 from hashlib import sha1
 from datetime import datetime as dt
@@ -53,7 +52,8 @@ def static(name):
 
 @route('/')
 def index():
-    return template('index', lexers=lexerlist())
+    return template('index', lexers=lexerlist(),
+                    deflexer=request.COOKIES.get("lexer", "guess"))
 
 @route('/', method='POST')
 def new():

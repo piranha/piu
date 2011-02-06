@@ -34,7 +34,7 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
     '''
     try:
         global redis
-        redis = Redis(host=redis_host, port=redis_port, db=db, timeout=1)
+        redis = Redis(host=redis_host, port=redis_port, db=db)
         redis.connect()
     except ConnectionError, e:
         sys.stderr.write('redis: %s\n' % e)

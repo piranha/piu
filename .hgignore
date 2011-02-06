@@ -1,5 +1,5 @@
 \.pyc$
-^ve/
+^venv/
 ^piu.egg-info/
 ^dist/
 ^build/

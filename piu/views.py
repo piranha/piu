@@ -13,7 +13,9 @@ from piu.utils import toepoch, fromepoch
 cookie = {'expires': 60*60*24*30*12}
 
 def sign(id, data):
-    return sha1(str(id) + data.encode('utf-8')).hexdigest()
+    if isinstance(data, unicode):
+        data = data.encode('utf-8')
+    return sha1(str(id) + data).hexdigest()
 
 def paste(id, data, lexer):
     '''actually paste data in redis'''
@@ -75,6 +77,7 @@ def show(id):
     data = redis.sort(key('%s:list', id), get=key('%s:*:html', id))
     if not data:
         return redirect('/', 302)
+    data = [data[0].decode('utf-8')]
 
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, redis[key('%s:1:raw', id)])
@@ -89,6 +92,7 @@ def show_raw(id):
     data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))
     if not data:
         return redirect('/', 302)
+    data = [data[0].decode('utf-8')]
 
     response.content_type = 'text/plain; charset=utf-8'
     return data[0]
@@ -113,6 +117,7 @@ def edit(id):
 
     # beware of 0 here!
     data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))[0]
+    data = data.decode('utf-8')
     return template('index', data=data, id=id, lexers=lexerlist())
 
 @route('/piu')

@@ -66,6 +66,9 @@ def new():
     paste(id, data, lexer)
     return redirect('/%s/' % id, 302)
 
+@route('/:id')
+def redirect_show(id):
+    return redirect('/%s/' % id, 301)
 
 @route('/:id/')
 def show(id):

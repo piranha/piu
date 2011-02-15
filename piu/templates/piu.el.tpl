@@ -38,12 +38,14 @@
   (let* ((region (if (use-region-p) (cons (region-beginning) (region-end))
                   (cons (point-min) (point-max))))
          (url-request-method "POST")
+         (url-request-extra-headers
+          '(("Content-Type" . "application/x-www-form-urlencoded")))
          (url-request-data
           (format "lexer=%s&data=%s"
                   (url-hexify-string
                    (or (assoc-default major-mode piu-types)
-                       (replace-in-string
-                        (substring (symbol-name major-mode) 0 -5) "-" "")))
+                       (replace-regexp-in-string
+                        "-" "" (substring (symbol-name major-mode) 0 -5))))
                   (url-hexify-string
                    (buffer-substring-no-properties (car region) (cdr region))))))
     (url-retrieve piu-url

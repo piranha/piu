@@ -11,7 +11,7 @@
 <span>Pasted at <time datetime="{{ date.isoformat() }}">{{ date }}</time></span> |
 <span>Highlighted as {{ lexer }}</span>
 </div>
-{{ data['html'] }}
+{{ item['html'] }}
 
 <span class="note">&uarr; Click line number to highlight;
   drag to highlight range; hold shift to select few</span>

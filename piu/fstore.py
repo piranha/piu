@@ -47,6 +47,9 @@ class FStore(object):
             raise KeyError('%s does not exist' % key)
         return Item(key, self, self.index[key])
 
+    def __iter__(self):
+        return iter(self.index)
+
     def keys(self):
         return self.index.keys()
 

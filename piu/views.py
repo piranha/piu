@@ -31,6 +31,7 @@ def paste(item, data, lexer):
     item['lexer'] = lexer
     item['html'] = result
     item['date'] = toepoch(dt.now())
+    item.save()
 
 def regenerate():
     for k in store:

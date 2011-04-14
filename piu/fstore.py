@@ -56,7 +56,7 @@ class FStore(object):
         except ValueError:
             key = 0
         item = Item(key, self, self.itempath(key))
-        for k, v in kwargs.itervalues():
+        for k, v in kwargs.iteritems():
             item[k] = v
         self.index[key] = item.path
         return item

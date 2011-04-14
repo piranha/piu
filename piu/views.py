@@ -59,7 +59,7 @@ def new():
     lexer = request.POST.get('lexer', 'guess')
     item = store.new()
     paste(item, data, lexer)
-    return redirect('/%s/' % id, 302)
+    return redirect('/%s/' % item.id, 302)
 
 @route('/:id')
 def redirect_show(id):

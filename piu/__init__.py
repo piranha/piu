@@ -4,10 +4,11 @@ import os.path as op
 from opster import command
 import bottle
 from bottle import run, default_app, debug as debug_, PasteServer
-from redis import Redis, ConnectionError
+
+import fstore
 
 bottle.TEMPLATE_PATH = [op.join(op.dirname(__file__), 'templates')]
-redis = None
+store = None
 
 def pathmw(app):
     def mw(e, sr):
@@ -29,16 +30,12 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
          redis_host = ('', 'localhost', 'host of redis'),
          redis_port = ('', 6379, 'port of redis'),
          db         = ('', 8, 'redis db number'),
+         path       = ('', 'store', 'path to store'),
          regenerate = ('', False, 'regenerate *:html in database')):
     '''paste.in.ua
     '''
-    global redis
-    redis = Redis(host=redis_host, port=redis_port, db=db)
-    try:
-        redis.ping()
-    except ConnectionError, e:
-        sys.stderr.write('redis: %s\n' % e)
-        sys.exit(1)
+    global store
+    store = fstore.FStore(path, create=True)
 
     # import views to register them
     import views

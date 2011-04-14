@@ -6,8 +6,8 @@ from pygments import lexers
 from bottle import route, request, redirect, send_file, response
 from bottle import jinja2_template as template
 
-from piu import redis
-from piu.utils import key, highlight, style, lexerlist, dec
+from piu import store
+from piu.utils import highlight, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
 
 cookie = {'expires': 60*60*24*30*12}
@@ -17,7 +17,7 @@ def sign(id, data):
         data = data.encode('utf-8')
     return sha1(str(id) + data).hexdigest()
 
-def paste(id, data, lexer):
+def paste(item, data, lexer):
     '''actually paste data in redis'''
     try:
         response.set_cookie('lexer', lexer, **cookie)
@@ -26,22 +26,16 @@ def paste(id, data, lexer):
     except AttributeError:
         pass
 
-    redis.sadd(key('%s:list', id), 1)
-    redis.set(key('%s:1:raw', id), data)
+    item['raw'] = data
     result, lexer = highlight(data, lexer)
-    redis.set(key('%s:1:lexer', id), lexer)
-    redis.set(key('%s:1:html', id), result)
-    redis.set(key('%s:1:date', id), toepoch(dt.now()))
+    item['lexer'] = lexer
+    item['html'] = result
+    item['date'] = toepoch(dt.now())
 
 def regenerate():
-    for k in redis.keys(key('*:list')):
-        id = k.split(':')[1]
-        data = redis.get(key('%s:1:raw', id))
-        if not data:
-            continue
-        data = data.decode('utf-8')
-        lexer = redis.get(key('%s:1:lexer', id))
-        paste(id, data, lexer)
+    for k in store:
+        with store[k] as i:
+            i['html'] = highlight(i['raw'], i['lexer'])[0]
 
 @route('/static/:name#.*#')
 @route('/:name#favicon.ico#')
@@ -63,9 +57,8 @@ def new():
     if not data:
         return redirect('/', 302)
     lexer = request.POST.get('lexer', 'guess')
-    id = redis.incr(key('next-id'))
-
-    paste(id, data, lexer)
+    item = store.new()
+    paste(item, data, lexer)
     return redirect('/%s/' % id, 302)
 
 @route('/:id')
@@ -74,51 +67,52 @@ def redirect_show(id):
 
 @route('/:id/')
 def show(id):
-    data = redis.sort(key('%s:list', id), get=key('%s:*:html', id))
-    if not data:
+    try:
+        id = int(id)
+        item = store[id]
+    except (ValueError, KeyError):
         return redirect('/', 302)
-    data = [data[0].decode('utf-8')]
 
     edit = request.COOKIES.get('edit-%s' % id, '')
-    owner = edit == sign(id, redis[key('%s:1:raw', id)])
+    owner = edit == sign(id, item['raw'])
 
-    lexer = lexers.get_lexer_by_name(redis[key('%s:1:lexer', id)]).name
+    lexer = lexers.get_lexer_by_name(item['lexer']).name
 
-    return template('show', data=data, id=id, owner=owner, lexer=lexer,
-                    date=fromepoch(redis.get(key('%s:1:date', id)) or 0))
+    return template('show', item=item, owner=owner, lexer=lexer,
+                    date=fromepoch(item.get('date', 0)))
 
 @route('/:id/raw/')
 def show_raw(id):
-    data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))
-    if not data:
+    try:
+        id = int(id)
+        item = store[id]
+    except (ValueError, KeyError):
         return redirect('/', 302)
-    data = [data[0].decode('utf-8')]
 
     response.content_type = 'text/plain; charset=utf-8'
-    return data[0]
+    return item['raw'].encode('utf-8')
 
 @route('/:id/edit/')
 @route('/:id/edit/', method='POST')
 def edit(id):
-    lst = redis.smembers(key('%s:list', id))
-    if not lst:
+    try:
+        id = int(id)
+        item = store[id]
+    except (ValueError, KeyError):
         return redirect('/', 302)
 
     edit = request.COOKIES.get('edit-%s' % id, '')
-    owner = edit == sign(id, redis[key('%s:1:raw', id)])
+    owner = edit == sign(id, item['raw'])
     if not owner:
         return redirect('/%s/' % id, 302)
 
     if request.method == 'POST':
         data = dec(request.POST.get('data'))
         lexer = request.POST.get('lexer', 'guess')
-        paste(id, data, lexer)
+        paste(item, data, lexer)
         return redirect('/%s/' % id, 302)
 
-    # beware of 0 here!
-    data = redis.sort(key('%s:list', id), get=key('%s:*:raw', id))[0]
-    data = data.decode('utf-8')
-    return template('index', data=data, id=id, lexers=lexerlist())
+    return template('index', data=item['raw'], id=id, lexers=lexerlist())
 
 @route('/piu')
 def piu():

@@ -27,9 +27,6 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
          port       = ('p', 8080, 'port to use'),
          reloader   = ('r', False, 'use reloader'),
          debug      = ('d', False, 'enable debug'),
-         redis_host = ('', 'localhost', 'host of redis'),
-         redis_port = ('', 6379, 'port of redis'),
-         db         = ('', 8, 'redis db number'),
          path       = ('', 'store', 'path to store'),
          regenerate = ('', False, 'regenerate *:html in database')):
     '''paste.in.ua

@@ -18,7 +18,7 @@ def sign(id, data):
     return sha1(str(id) + data).hexdigest()
 
 def paste(item, data, lexer):
-    '''actually paste data in redis'''
+    '''actually store data'''
     try:
         response.set_cookie('lexer', lexer, **cookie)
         # BUG: this does not override old cookie

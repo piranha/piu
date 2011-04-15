@@ -13,7 +13,8 @@ setup(name='piu',
       author_email='piranha@piranha.org.ua',
       packages=['piu'],
       include_package_data=True,
-      install_requires=['opster', 'bottle', 'redis', 'pygments', 'paste', 'jinja2', 'tnetstring'],
+      install_requires=['opster', 'bottle', 'pygments', 'paste', 'jinja2',
+                        'tnetstring'],
       entry_points='''
       [console_scripts]
       piud = piu:main

@@ -53,11 +53,12 @@ class FStore(object):
     def keys(self):
         return self.index.keys()
 
-    def new(self, **kwargs):
-        try:
-            key = max(self.index.keys()) + 1
-        except ValueError:
-            key = 0
+    def new(self, key=None, **kwargs):
+        if key is None:
+            try:
+                key = max(self.index.keys()) + 1
+            except ValueError:
+                key = 0
         item = Item(key, self, self.itempath(key), create=True)
         for k, v in kwargs.iteritems():
             item[k] = v

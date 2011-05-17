@@ -3,3 +3,4 @@
 ^piu.egg-info/
 ^dist/
 ^build/
+^store/

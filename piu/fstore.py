@@ -58,7 +58,7 @@ class FStore(object):
             key = max(self.index.keys()) + 1
         except ValueError:
             key = 0
-        item = Item(key, self, self.itempath(key))
+        item = Item(key, self, self.itempath(key), create=True)
         for k, v in kwargs.iteritems():
             item[k] = v
         self.index[key] = item.path
@@ -100,13 +100,15 @@ class FStore(object):
 
 
 class Item(collections.MutableMapping):
-    def __init__(self, key, fstore, path):
+    def __init__(self, key, fstore, path, create=False):
         self.id = key
         self.store = fstore
         self.path = path
         try:
             self.data = tnetstring.loads(fstore.open(path).read())
         except IOError:
+            if not create:
+                raise KeyError('Item does not exist')
             self.data = {}
 
     # implemented abstract methods

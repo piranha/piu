@@ -17,6 +17,6 @@ setup(name='piu',
                         'tnetstring'],
       entry_points='''
       [console_scripts]
-      piud = piu:main
+      piud = piu:main.command
       '''
       )

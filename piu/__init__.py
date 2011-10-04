@@ -10,18 +10,6 @@ import fstore
 bottle.TEMPLATE_PATH = [op.join(op.dirname(__file__), 'templates')]
 store = None
 
-def pathmw(app):
-    def mw(e, sr):
-        path = e['PATH_INFO']
-        method = e['REQUEST_METHOD']
-        if (not app.match_url(path, method)[0] and
-            not path.endswith('/') and
-            app.match_url(path + '/', method)[0]):
-            sr('301 Moved Permanently', [('Location', path + '/')])
-            return ''
-        return app(e, sr)
-    return mw
-
 @command(usage='[OPTS]')
 def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
          port       = ('p', 8080, 'port to use'),
@@ -42,11 +30,11 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
         sys.exit()
 
     kwargs = {'server': PasteServer}
-    app = pathmw(default_app())
+    app = default_app()
     if debug:
         debug_()
     sys.exit(run(app=app, host=address, port=port, reloader=reloader,
                  **kwargs))
 
 if __name__ == '__main__':
-    main()
+    main.command()

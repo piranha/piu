@@ -10,7 +10,7 @@ from piu import store
 from piu.utils import highlight, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
 
-cookie = {'expires': 60*60*24*30*12}
+cookie = {'expires': 60*60*24*30*12, 'path': '/'}
 
 def sign(id, data):
     if isinstance(data, unicode):
@@ -21,7 +21,6 @@ def paste(item, data, lexer):
     '''actually store data'''
     try:
         response.set_cookie('lexer', lexer, **cookie)
-        # BUG: this does not override old cookie
         response.set_cookie('edit-%s' % item.id, sign(item.id, data), **cookie)
     except AttributeError:
         pass

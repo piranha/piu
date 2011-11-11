@@ -68,6 +68,6 @@
 
 <p>Also we have small nice <a href="/piu.el">piece of code</a> for Emacs;
 download and put it somewhere in your Emacs' <code>'load-path'</code>. Comments
-about usage are inside a file itself.</p>
+about usage are inside the file itself.</p>
 
 {% endblock %}

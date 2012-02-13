@@ -8,7 +8,7 @@
   <title>paste.in.ua</title>
   <link rel="stylesheet" href="/static/main.css">
   <link rel="stylesheet" href="/static/styles/default.css">
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="/static/shortcut.js"></script>
   <script src="/static/main.js"></script>
 </head>

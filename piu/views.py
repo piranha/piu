@@ -76,10 +76,11 @@ def show(id):
     edit = request.COOKIES.get('edit-%s' % id, '')
     owner = edit == sign(id, item['raw'])
 
-    lexer = lexers.get_lexer_by_name(item['lexer']).name
+    lexername = request.GET.get('as') or item['lexer']
+    lexer = lexers.get_lexer_by_name(lexername)
 
     return template('show', item=item, owner=owner, lexer=lexer,
-                    date=fromepoch(item.get('date', 0)))
+                    lexers=lexerlist(), date=fromepoch(item.get('date', 0)))
 
 @route('/:id/raw/')
 def show_raw(id):

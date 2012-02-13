@@ -113,7 +113,8 @@ def edit(id):
         paste(item, data, lexer)
         return redirect('/%s/' % id, 302)
 
-    return template('index', data=item['raw'], id=id, lexers=lexerlist())
+    return template('index', data=item['raw'], id=id,
+                    deflexer=item['lexer'], lexers=lexerlist())
 
 @route('/piu')
 def piu():

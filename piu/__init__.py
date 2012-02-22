@@ -3,7 +3,7 @@ import os.path as op
 
 from opster import command
 import bottle
-from bottle import run, default_app, debug as debug_, PasteServer
+from bottle import run, default_app, debug as debug_
 
 import fstore
 
@@ -29,12 +29,11 @@ def main(address    = ('a', 'localhost', 'ip address (host) to bind'),
         views.regenerate()
         sys.exit()
 
-    kwargs = {'server': PasteServer}
     app = default_app()
     if debug:
         debug_()
     sys.exit(run(app=app, host=address, port=port, reloader=reloader,
-                 **kwargs))
+                 server='tornado'))
 
 if __name__ == '__main__':
     main.command()

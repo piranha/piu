@@ -13,7 +13,7 @@ setup(name='piu',
       author_email='piranha@piranha.org.ua',
       packages=['piu'],
       include_package_data=True,
-      install_requires=['opster>=3.3.1', 'bottle>=0.9.6', 'pygments', 'paste',
+      install_requires=['opster>=3.3.1', 'bottle>=0.9.6', 'pygments', 'tornado',
                         'jinja2', 'tnetstring'],
       entry_points='''
       [console_scripts]

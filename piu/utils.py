@@ -11,7 +11,7 @@ def toepoch(dt):
 def fromepoch(s):
     return dt.fromtimestamp(int(s))
 
-def highlight(code, lexer='guess', formatter='codehtml'):
+def highlight(code, lexer='guess'):
     try:
         if lexer == 'guess':
             lexer = lexers.guess_lexer(code)
@@ -20,8 +20,7 @@ def highlight(code, lexer='guess', formatter='codehtml'):
     except lexers.ClassNotFound:
         lexer = lexers.get_lexer_by_name('text')
 
-    formatter = CodeHtmlFormatter(
-        linenos='table', anchorlinenos=True, lineanchors='l')
+    formatter = CodeHtmlFormatter()
 
     return highlight_(code, lexer, formatter), lexer.aliases[0]
 
@@ -34,15 +33,19 @@ def lexerlist():
     for name, alias, _, _ in lst:
         yield alias[0], name
 
-
 class CodeHtmlFormatter(formatters.HtmlFormatter):
+    def __init__(self, **kwargs):
+        kwargs.update({'linenos': 'table',
+                       'anchorlinenos': True,
+                       'lineanchors': True})
+        super(CodeHtmlFormatter, self).__init__(**kwargs)
+
     def _wrap_lineanchors(self, inner):
-        s = self.lineanchors
         i = 0
         for t, line in inner:
             if t == 1:
                 i += 1
-                yield t, '<div class="line" id="%s-%d">%s</div>' % (s, i, line)
+                yield t, '<div class="line" id="%s">%s</div>' % (i, line)
             else:
                 yield t, line
 
@@ -54,48 +57,16 @@ class CodeHtmlFormatter(formatters.HtmlFormatter):
                 lncount += 1
             dummyoutfile.write(line)
 
-        fl = self.linenostart
-        mw = len(str(lncount + fl - 1))
-        sp = self.linenospecial
-        st = self.linenostep
-        la = self.lineanchors
-        aln = self.anchorlinenos
-        if sp:
-            lines = []
-
-            for i in range(fl, fl+lncount):
-                if i % st == 0:
-                    if i % sp == 0:
-                        if aln:
-                            lines.append('<a href="#%s-%d" class="special">%*d</a>' %
-                                         (la, i, mw, i))
-                        else:
-                            lines.append('<span class="special">%*d</span>' % (mw, i))
-                    else:
-                        if aln:
-                            lines.append('<a href="#%s-%d">%*d</a>' % (la, i, mw, i))
-                        else:
-                            lines.append('%*d' % (mw, i))
-                else:
-                    lines.append('')
-            ls = '\n'.join(lines)
-        else:
-            lines = []
-            for i in range(fl, fl+lncount):
-                if i % st == 0:
-                    if aln:
-                        lines.append('<a href="#%s-%d">%*d</a>' % (la, i, mw, i))
-                    else:
-                        lines.append('%*d' % (mw, i))
-                else:
-                    lines.append('')
-            ls = ''.join(lines)
+        lines = []
+        for i in range(1, 1 + lncount):
+            lines.append('<a rel="%d" id="a-%d">%d</a>' % (i, i, i))
+        ls = ''.join(lines) # no newline so they can be displayed as blocks
 
         # in case you wonder about the seemingly redundant <div> here: since the
         # content in the other cell also is wrapped in a div, some browsers in
         # some configurations seem to mess up the formatting...
         yield 0, ('<table class="%stable">' % self.cssclass +
-                  '<tr><td class="linenos"><div class="linenodiv">' +
-                  ls + '</div></td><td class="code">')
+                  '<tr><td><pre class="linenos">' +
+                  ls + '</pre></td><td class="code">')
         yield 0, dummyoutfile.getvalue()
         yield 0, '</td></tr></table>'

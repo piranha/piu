@@ -26,61 +26,46 @@ $(document).ready(function() {
     shortcut.add('ctrl+j', function() { lexers.focus(); });
     shortcut.add('ctrl+n', function() { document.location.href = '/'; });
 
-    // links do not work with selections
-    $('.linenos a').each(function() {
-        this.rel = this.href.split('#')[1];
-        this.removeAttribute('href');
-    });
-
     hlter.run();
 
     // highlight hovered lines
     $('.line').hover(
-        function() { $(line(this.id)).addClass('over'); },
-        function() { $(line(this.id)).removeClass('over'); }
+        function() { $('#' + this.id).addClass('over'); },
+        function() { $('#' + this.id).removeClass('over'); }
         );
     $('.linenos a').hover(
-        function() { $(line(this.rel)).addClass('over'); },
-        function() { $(line(this.rel)).removeClass('over'); }
+        function() { $('#' + this.rel).addClass('over'); },
+        function() { $('#' + this.rel).removeClass('over'); }
         );
-
 });
 
-function line(id) {
-    if (id.toString().indexOf('-') + 1) { // that's l-num
-        return '#' + id + ', .linenos a[rel=' + id + ']';
-    } else {
-        return '#l-' + id + ', .linenos a[rel=l-' + id + ']';
-    }
-};
-
 hlter = {
-    last_location: null,    // what location we're following right now
+    last_location: null,    // which location we're following right now
     run_interval_every: 50, // time in ms that the URL is queried for changes
     selecting: null,        // if user is selecting lines, first line
     current: null,          // current line or line number if any
     modifier: 0,            // if ctrl or shift is pressed
-    // ctrl - 16, shift - 17
-    isModifier: function(code) { return [16,17].indexOf(code) + 1; },
+    // shift - 16, ctrl - 17
+    isModifier: function(code) { return [16].indexOf(code) + 1; },
     bit: function(code) { return 1 << (code - 16); },
 
     run: function() {
         var app = this;
-        this.check();
+        this.lineselection(true);
+        // this.check();
         this._interval = setInterval(function() {
             app.check.apply(app);
         }, this.run_interval_every);
 
         $('.linenos a').disableTextSelect();
 
-        $('.linenos a').mousedown(function() { app.selectStart(this.rel); })
+        $('.linenos a')
+            .mousedown(function(e) { if (e.which == 1) app.selectStart(this.rel); })
             .mouseup(function() { app.selectEnd(this.rel); });
         $('.line').mouseup(function() { app.selectEnd(this.id); });
 
-        // $('.line, .linenos a').mouseenter(function() { app.current = this; })
-        //     .mouseleave(function() { if (app.current == this) { app.current = null; } });
-        $('.line').mousemove(function() { app.current = this.id; })
-        $('.linenos a').mousemove(function() { app.current = this.rel; })
+        $('.line').mousemove(function() { app.current = this.id; });
+        $('.linenos a').mousemove(function() { app.current = this.rel; });
 
         // yay bitwise :P
         $(window).keydown(function(event) {
@@ -95,57 +80,72 @@ hlter = {
     },
 
     selectStart: function(id) { this.selecting = id; },
-    selectEnd: function(id) { this.select(id); this.selecting = null; },
+    selectEnd: function(id) { this.select(id); },
 
     select: function(end) {
         if (!this.selecting) { return; }
 
         var range = this.selecting;
-        if (end && end != this.selecting)
-            { range += ':' + end; }
+        if (end && end != this.selecting) {
+            range += ':' + end;
+        }
 
-        if (this.modifier && window.location.hash)
-            { window.location.hash += ',' + range; }
-        else
-            { window.location.hash = range; }
+        if (this.modifier && window.location.hash) {
+            window.location.hash += ',' + range;
+        } else {
+            window.location.hash = range;
+        }
+
+        this.selecting = null;
     },
 
     ongoingselection: function() {
         $('.linenos a').removeClass('selecting');
         if (!(this.selecting && this.current)) { return; }
-        var pair = this.startend([this.selecting, this.current]);
 
-        for (var i = pair[0]; i <= pair[1]; i += 1) {
-            $('.linenos a[rel=l-' + i + ']').addClass('selecting');
+        var range = this.range(this.selecting, this.current, '#a-');
+        $(range.join(', ')).addClass('selecting');
+    },
+
+    lineselection: function(onload) {
+        $('.line, .linenos a').removeClass('selected');
+        var specifiers = this.location().split(',');
+        var first;
+        for (var i = 0, l = specifiers.length; i < l; i++) {
+            var pair = this.getPair(specifiers[i]);
+            var range = this.range(pair[0], pair[1]);
+            $(range.join(', ')).addClass('selected');
+
+            if (onload && (!first || first > pair[0])) {
+                first = pair[0];
+            }
+        }
+
+        if (onload && first !== undefined) {
+            $('html').scrollTop($('#' + first).offset().top);
         }
     },
 
-    lineselection: function() {
-        $('.line, .linenos a').removeClass('selected');
-        var specifiers = this.location().split(',');
+    int: function(v) { return parseInt(v, 10); },
 
-        for (var k in specifiers) { if (specifiers.hasOwnProperty(k)) {
-            var pair = specifiers[k].split(':');
-            if (pair.length != 2)
-                { pair[1] = pair[0]; }
-            pair = this.startend(pair);
-
-            for (var i = pair[0]; i <= pair[1]; i += 1) {
-                $(line(i)).addClass('selected');
-            }
-        } }
-    },
-
-    parseInt: function(s) {
-        return parseInt(s.split('-')[1], 10);
-    },
-
-    startend: function(pair) {
-        self = this;
-        pair = $.map(pair, function(x) { return self.parseInt(x); });
-        if (pair[0] > pair[1])
-            { return [pair[1], pair[0]]; }
+    getPair: function(x) {
+        var pair = $.map(x.split(':'), this.int);
+        if (pair[0] > pair[1]) {
+            return [pair[1], pair[0]];
+        }
         return pair;
+    },
+
+    range: function(start, end, prefix) {
+        if (!start) { return []; }
+        if (!end) { end = start; }
+        if (!prefix) { prefix = '#'; }
+
+        var range = [];
+        for (var i = start; i <= end; i++) {
+            range.push(prefix + i);
+        }
+        return range;
     },
 
     location: function() {

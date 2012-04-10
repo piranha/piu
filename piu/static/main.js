@@ -121,7 +121,7 @@ hlter = {
             }
         }
 
-        if (onload && first !== undefined) {
+        if (onload && first) {
             $('html').scrollTop($('#' + first).offset().top);
         }
     },

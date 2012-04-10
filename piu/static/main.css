@@ -41,3 +41,8 @@ td { padding: 1px 0; }
           padding: 0.5em; }
 #footer p { text-align: right; margin: auto 2em; }
 #footer a { color: black; }
+
+/* Wrapping */
+
+.wrap .linenos, .wrap .note { display: none; }
+.wrap pre { white-space: pre-wrap; }

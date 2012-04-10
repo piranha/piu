@@ -3,13 +3,18 @@ $(document).ready(function() {
     var text = $('#text');
 
     lexers.change(function() {
-        $('.hot').removeClass('selected');
+        $('.hot.selected').removeClass('selected');
         $('.hot[rel=' + lexers.val() + ']').addClass('selected');
     });
 
     $('span.hot').click(function() {
         lexers.val($(this).attr('rel')).change();
         text.focus();
+    });
+
+    $('#wrap').click(function(e) {
+        e.preventDefault();
+        $('html').toggleClass('wrap');
     });
 
     lexers.change();
@@ -170,16 +175,21 @@ hlter = {
 (function($) {
     if ($.browser.mozilla) {
         $.fn.disableTextSelect = function() {
-            return this.each(function() { $(this).css({'MozUserSelect' : 'none'}); });
+            return this.each(function() {
+                $(this).css({'MozUserSelect' : 'none'});
+            });
         };
         $.fn.enableTextSelect = function() {
-            return this.each(function() { $(this).css({'MozUserSelect' : ''}); });
+            return this.each(function() {
+                $(this).css({'MozUserSelect' : ''});
+            });
         };
     } else {
-        var tgt = ($.browser.msie ? 'selectstart' : 'mousedown')+'.disableTextSelect';
+        var tgt = ($.browser.msie ? 'selectstart' : 'mousedown') +
+            '.disableTextSelect';
         $.fn.disableTextSelect = function() {
             return this.each(function() {
-                $(this).bind(tgt, function() { return false; });
+                $(this).bind(tgt, function(e) { e.preventDefault(); });
             });
         };
         $.fn.enableTextSelect = function() {

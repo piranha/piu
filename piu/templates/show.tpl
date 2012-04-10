@@ -14,6 +14,7 @@
     {% if owner -%}
     <a id="edit" href="/{{ item.id }}/edit/">edit your code</a> |
     {%- endif %}
+    <a id="wrap" href="#">toggle wrap</a> |
     <a href="/{{ item.id }}/raw/">raw</a>
   </span>
 <span>Pasted at <time datetime="{{ date.isoformat() }}">{{ date }}</time></span> |

@@ -90,7 +90,8 @@ def show_raw(id):
     except (ValueError, KeyError):
         return redirect('/', 302)
 
-    response.content_type = 'text/plain; charset=utf-8'
+    ctype = request.GET.get('as', 'text/plain')
+    response.content_type = '%s; charset=utf-8' % ctype
     return item['raw'].encode('utf-8')
 
 @route('/:id/edit/')

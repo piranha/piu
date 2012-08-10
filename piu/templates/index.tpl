@@ -7,7 +7,7 @@
       <option value="guess">Guess type</option>
       {%- for alias, name in lexers %}
       <option value="{{ alias }}"
-              {%- if deflexer == alias %}selected{% endif %}>{{ name }}</option>
+              {%- if deflexer == alias %} selected{% endif %}>{{ name }}</option>
       {%- endfor %}
     </select>
 

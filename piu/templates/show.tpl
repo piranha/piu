@@ -7,7 +7,7 @@
       <option value="">View as</option>
       {%- for alias, name in lexers %}
       <option value="{{ alias }}"
-              {%- if alias in lexer.aliases %}selected{% endif %}>{{ name }}</option>
+              {%- if alias in lexer.aliases %} selected{% endif %}>{{ name }}</option>
       {%- endfor %}
     </select> |
 

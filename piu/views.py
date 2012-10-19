@@ -3,7 +3,7 @@ from hashlib import sha1
 from datetime import datetime as dt
 
 from pygments import lexers
-from bottle import route, request, redirect, send_file, response
+from bottle import route, request, redirect, static_file, response
 from bottle import jinja2_template as template
 
 from piu import store
@@ -44,7 +44,7 @@ def static(name):
     if name == 'style.css':
         response.content_type = 'text/css'
         return style()
-    return send_file(name, root=op.join(op.dirname(__file__), 'static'))
+    return static_file(name, root=op.join(op.dirname(__file__), 'static'))
 
 @route('/')
 def index():

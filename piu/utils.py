@@ -1,6 +1,7 @@
 import StringIO
 from datetime import datetime as dt
 from pygments import lexers, formatters, highlight as highlight_
+from pygments.lexer import Lexer
 
 def dec(s):
     return s.decode('utf-8')
@@ -12,7 +13,7 @@ def fromepoch(s):
     return dt.fromtimestamp(int(s))
 
 def highlight(code, lexer=None):
-    if not isinstance(lexer, lexers.Lexer):
+    if not isinstance(lexer, Lexer):
         try:
             if lexer == None:
                 lexer = lexers.guess_lexer(code)

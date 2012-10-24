@@ -1,4 +1,5 @@
 import json
+import re
 import os.path as op
 from hashlib import sha1
 from datetime import datetime as dt
@@ -11,7 +12,10 @@ from piu import store
 from piu.utils import highlight, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
 
+
 cookie = {'expires': 60*60*24*30*12, 'path': '/'}
+spamre = re.compile('^comment\d+,')
+
 
 def sign(id, data):
     if isinstance(data, unicode):
@@ -25,6 +29,9 @@ def paste(item, data, lexer):
         response.set_cookie('edit-%s' % item.id, sign(item.id, data), **cookie)
     except AttributeError:
         pass
+
+    if spamre.search(data):
+        raise ValueError('crap inside: %s' % request.POST)
 
     item['raw'] = data
     result, lexer = highlight(data, lexer)

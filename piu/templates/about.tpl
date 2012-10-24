@@ -32,6 +32,11 @@
   <dd>Create new paste</dd>
 </dl>
 
+<h2 id="pretty"><a href="#pretty">Prettification</a></h2>
+
+<p>If you have pasted JSON, you'll have option to prettify it (look at top-right
+  corner). Just in case you have some ugly one.</p>
+
 <h2 id="api"><a href="#api">API</a></h2>
 
 <p>

@@ -11,14 +11,15 @@ def toepoch(dt):
 def fromepoch(s):
     return dt.fromtimestamp(int(s))
 
-def highlight(code, lexer='guess'):
-    try:
-        if lexer == 'guess':
-            lexer = lexers.guess_lexer(code)
-        else:
-            lexer = lexers.get_lexer_by_name(lexer)
-    except lexers.ClassNotFound:
-        lexer = lexers.get_lexer_by_name('text')
+def highlight(code, lexer=None):
+    if not isinstance(lexer, lexers.Lexer):
+        try:
+            if lexer == None:
+                lexer = lexers.guess_lexer(code)
+            else:
+                lexer = lexers.get_lexer_by_name(lexer)
+        except lexers.ClassNotFound:
+            lexer = lexers.get_lexer_by_name('text')
 
     formatter = CodeHtmlFormatter()
 

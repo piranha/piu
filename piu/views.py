@@ -1,3 +1,4 @@
+import json
 import os.path as op
 from hashlib import sha1
 from datetime import datetime as dt
@@ -78,6 +79,13 @@ def show(id):
 
     lexername = request.GET.get('as') or item['lexer']
     lexer = lexers.get_lexer_by_name(lexername)
+
+    if request.GET.get('pretty') and lexer.name == 'JSON':
+        try:
+            data = json.dumps(json.loads(item['raw']), sort_keys=True, indent=4)
+            item['html'] = highlight(data, lexer)[0]
+        except ValueError:
+            pass
 
     return template('show', item=item, owner=owner, lexer=lexer,
                     lexers=lexerlist(), date=fromepoch(item.get('date', 0)))

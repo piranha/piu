@@ -31,7 +31,8 @@ def paste(item, data, lexer):
         pass
 
     if spamre.search(data):
-        raise ValueError('crap inside: %s' % dict(request.POST))
+        raise ValueError('crap inside: %s\n\n\n%s' %
+                         (dict(request.POST), dict(request.headers)))
 
     item['raw'] = data
     result, lexer = highlight(data, lexer)

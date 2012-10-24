@@ -5,7 +5,7 @@ from hashlib import sha1
 from datetime import datetime as dt
 
 from pygments import lexers
-from bottle import route, request, redirect, static_file, response
+from bottle import route, request, redirect, static_file, response, abort
 from bottle import jinja2_template as template
 
 from piu import store
@@ -30,9 +30,6 @@ def paste(item, data, lexer):
     except AttributeError:
         pass
 
-    if spamre.search(data):
-        raise ValueError('crap inside: %s\n\n\n%s' %
-                         (dict(request.POST), dict(request.headers)))
 
     item['raw'] = data
     result, lexer = highlight(data, lexer)
@@ -46,6 +43,7 @@ def regenerate():
         with store[k] as i:
             i['html'] = highlight(i['raw'], i['lexer'])[0]
 
+
 @route('/static/:name#.*#')
 @route('/:name#favicon.ico#')
 @route('/:name#robots.txt#')
@@ -55,24 +53,32 @@ def static(name):
         return style()
     return static_file(name, root=op.join(op.dirname(__file__), 'static'))
 
+
 @route('/')
 def index():
     return template('index', lexers=lexerlist(),
                     deflexer=request.COOKIES.get("lexer", "guess"))
+
 
 @route('/', method='POST')
 def new():
     data = dec(request.POST.get('data'))
     if not data:
         return redirect('/', 302)
+
+    if spamre.search(data):
+        abort(402, 'Wanna spam? Pay me money! ;)')
+
     lexer = request.POST.get('lexer', 'guess')
     item = store.new()
     paste(item, data, lexer)
     return redirect('/%s/' % item.id, 302)
 
+
 @route('/:id')
 def redirect_show(id):
     return redirect('/%s/' % id, 301)
+
 
 @route('/:id/')
 def show(id):

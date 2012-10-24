@@ -80,7 +80,7 @@ def show(id):
     lexername = request.GET.get('as') or item['lexer']
     lexer = lexers.get_lexer_by_name(lexername)
 
-    if request.GET.get('pretty') and lexer.name == 'JSON':
+    if 'pretty' in request.GET and lexer.name == 'JSON':
         try:
             data = json.dumps(json.loads(item['raw']), sort_keys=True, indent=4)
             item['html'] = highlight(data, lexer)[0]

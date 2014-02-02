@@ -1,1 +1,1 @@
-web: piud -p 5000
+web: piud -p 5000 --path store

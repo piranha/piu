@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ x$1 == x ]; then
-    echo "please supply destination path as argument"
+    echo "Please supply destination path as argument"
     exit
 fi
 

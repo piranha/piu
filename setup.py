@@ -8,7 +8,7 @@ if 'register' in sys.argv:
 
 setup(name='piu',
       description='paste.in.ua',
-      version='0.1',
+      version='0.2',
       author='Alexander Solovyov',
       author_email='piranha@piranha.org.ua',
       packages=['piu'],

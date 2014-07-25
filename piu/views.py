@@ -13,8 +13,9 @@ from piu.utils import highlight, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
 
 
-cookie = {'expires': 60*60*24*30*12, 'path': '/'}
+cookie = {'max_age': 60*60*24*30*12, 'path': '/'}
 spamre = re.compile('^comment\d+,')
+secret = 'most-secret-secret'
 
 
 def sign(id, data):
@@ -22,14 +23,11 @@ def sign(id, data):
         data = data.encode('utf-8')
     return sha1(str(id) + data).hexdigest()
 
+
 def paste(item, data, lexer):
     '''actually store data'''
-    try:
-        response.set_cookie('lexer', lexer, **cookie)
-        response.set_cookie('edit-%s' % item.id, sign(item.id, data), **cookie)
-    except AttributeError:
-        pass
-
+    response.set_cookie('lexer', lexer, **cookie)
+    response.set_cookie('edit-%s' % item.id, data, secret=secret, **cookie)
 
     item['raw'] = data
     result, lexer = highlight(data, lexer)
@@ -57,7 +55,7 @@ def static(name):
 @route('/')
 def index():
     return template('index', lexers=lexerlist(),
-                    deflexer=request.COOKIES.get("lexer", "guess"))
+                    deflexer=request.cookies.get("lexer", "guess"))
 
 
 @route('/', method='POST')
@@ -88,8 +86,7 @@ def show(id):
     except (ValueError, KeyError):
         return redirect('/', 302)
 
-    edit = request.COOKIES.get('edit-%s' % id, '')
-    owner = edit == sign(id, item['raw'])
+    owner = bool(request.get_cookie('edit-%s' % id, '', secret=secret))
 
     lexername = request.GET.get('as') or item['lexer']
     lexer = lexers.get_lexer_by_name(lexername)
@@ -125,7 +122,7 @@ def edit(id):
     except (ValueError, KeyError):
         return redirect('/', 302)
 
-    edit = request.COOKIES.get('edit-%s' % id, '')
+    edit = request.cookies.get('edit-%s' % id, '')
     owner = edit == sign(id, item['raw'])
     if not owner:
         return redirect('/%s/' % id, 302)

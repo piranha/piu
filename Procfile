@@ -1,1 +1,1 @@
-web: piud -p $PORT --path /store
+web: piud -p $PORT --path /store -d

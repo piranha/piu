@@ -21,13 +21,13 @@ secret = 'most-secret-secret'
 def sign(id, data):
     if isinstance(data, unicode):
         data = data.encode('utf-8')
-    return sha1(str(id) + data).hexdigest()
+    return sha1(secret + str(id) + data).hexdigest()
 
 
 def paste(item, data, lexer):
     '''actually store data'''
     response.set_cookie('lexer', lexer, **cookie)
-    response.set_cookie('edit-%s' % item.id, data, secret=secret, **cookie)
+    response.set_cookie('edit-%s' % item.id, item.id, secret=secret, **cookie)
 
     item['raw'] = data
     result, lexer = highlight(data, lexer)

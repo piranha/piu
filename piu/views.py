@@ -122,8 +122,7 @@ def edit(id):
     except (ValueError, KeyError):
         return redirect('/', 302)
 
-    edit = request.cookies.get('edit-%s' % id, '')
-    owner = edit == sign(id, item['raw'])
+    owner = bool(request.get_cookie('edit-%s' % id, secret=secret))
     if not owner:
         return redirect('/%s/' % id, 302)
 

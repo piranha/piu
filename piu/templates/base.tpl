@@ -21,7 +21,7 @@
 
   <div id="footer">
     <p>
-      &#169; 2009-2011 <a href="http://piranha.org.ua">Alexander Solovyov</a>,
+      &#169; 2009-2011 <a href="http://solovyov.net/">Alexander Solovyov</a>,
       <a href="/about/">about</a>
     </p>
   </div>

@@ -6,4 +6,4 @@ COPY . /app/
 
 RUN python setup.py install
 
-CMD "piud -a 0.0.0.0 -p 5000 --path /store -d"
+CMD ["piud", "-a", "0.0.0.0", "-p", "5000", "--path", "/store"]

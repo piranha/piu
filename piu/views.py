@@ -15,7 +15,7 @@ from piu.utils import toepoch, fromepoch
 
 cookie = {'max_age': 60*60*24*30*12, 'path': '/'}
 spamre = re.compile('^comment\d+,')
-secret = 'most-secret-secret'
+secret = 'epic-secret'
 
 
 def sign(id, data):

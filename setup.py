@@ -15,9 +15,9 @@ setup(name='piu',
       include_package_data=True,
       install_requires=['opster>=3.3.1',
                         'bottle==0.12.7',
-                        'Pygments==1.6',
+                        'Pygments==2.0.2',
                         'tornado==3.1.1',
-                        'jinja2==2.7.1',
+                        'jinja2==2.7.3',
                         'tnetstring==0.2.1'],
       entry_points='''
       [console_scripts]

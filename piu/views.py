@@ -97,6 +97,8 @@ def show(id):
             item['html'] = highlight(data, lexer)[0]
         except ValueError:
             pass
+    elif lexername != item['lexer']:
+        item['html'] = highlight(item['raw'], lexer)
 
     return template('show', item=item, owner=owner, lexer=lexer,
                     lexers=lexerlist(), date=fromepoch(item.get('date', 0)))

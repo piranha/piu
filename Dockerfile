@@ -4,6 +4,7 @@ RUN mkdir /app
 WORKDIR /app
 COPY . /app/
 VOLUME ["/store"]
+EXPOSE 5000
 
 RUN python setup.py install
 

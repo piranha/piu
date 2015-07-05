@@ -2,6 +2,7 @@ import os
 import os.path as op
 import json
 import re
+import sys
 from hashlib import sha1
 from datetime import datetime as dt
 
@@ -16,7 +17,10 @@ from piu.utils import toepoch, fromepoch
 
 COOKIE = {'max_age': 60*60*24*30*12, 'path': '/'}
 SPAMRE = re.compile('^comment\d+,')
-SECRET = os.environ.get('SECRET', 'epic-secret')
+SECRET = os.environ.get('SECRET')
+if not SECRET:
+    sys.stderr.write("\nWARNING: set 'SECRET' env variable to be secure\n\n")
+    SECRET = 'epic-secret'
 
 
 def sign(id, data):

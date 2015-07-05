@@ -1,7 +1,8 @@
 {% extends "base" %} {# -*- mode: django-html -*- #}
 
 {% block content %}
-<p>That's a simple pastebin, don't hesitate to use it. ;-)</p>
+<p>That's a simple pastebin, don't hesitate to use it. ;-) In case you want your
+  own, sources are on <a href="https://github.com/piranha/piu">Github</a>.</p>
 
 <h2 id="selections"><a href="#selections">Selections</a></h2>
 

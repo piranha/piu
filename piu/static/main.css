@@ -25,6 +25,8 @@ code { font-size: 1em; }
 td { padding: 1px 0; }
 .linenos { padding: 0; border-right: 1px dashed #bbb; }
 .linenos a { cursor: pointer; color: black; display: block; text-align: right; padding: 0 3px; }
+.linenos a { -webkit-user-select: none; -moz-user-select: none;
+             -ms-user-select: none; user-select: none; }
 .code { width: 100%; }
 .line { padding-left: 1em; }
 

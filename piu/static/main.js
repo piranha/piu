@@ -189,33 +189,24 @@ hlter = {
     }
 };
 
-/* .disableTextSelect, version 1.2
+/* .disableTextSelect, version 2.0
    Copyright (c) 2007 James Dempster
-   Copyright (c) 2009 Alexander Solovyov
+   Copyright (c) 2009, 2015 Alexander Solovyov
    under terms of MIT License
  */
 (function($) {
-    if ($.browser.mozilla) {
+    if (navigator.userAgent.match(/msie/)) {
         $.fn.disableTextSelect = function() {
             return this.each(function() {
-                $(this).css({'MozUserSelect' : 'none'});
+                $(this).bind('selectstart', function(e) { e.preventDefault(); });
             });
         };
         $.fn.enableTextSelect = function() {
-            return this.each(function() {
-                $(this).css({'MozUserSelect' : ''});
-            });
+            return this.each(function() { $(this).unbind('selectstart'); });
         };
     } else {
-        var tgt = ($.browser.msie ? 'selectstart' : 'mousedown') +
-            '.disableTextSelect';
-        $.fn.disableTextSelect = function() {
-            return this.each(function() {
-                $(this).bind(tgt, function(e) { e.preventDefault(); });
-            });
-        };
-        $.fn.enableTextSelect = function() {
-            return this.each(function() { $(this).unbind(tgt); });
-        };
+        // handled through css, search for user-select
+        $.fn.disableTextSelect = function() {};
+        $.fn.enableTextSelect = function() {};
     }
 })(jQuery);

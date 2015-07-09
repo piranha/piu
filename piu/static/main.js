@@ -3,7 +3,7 @@
 
 function addShortcut(keyCode, mods, callback) {
     mods = mods || {};
-    document.addEventListener('keydown', function(e) {
+    listenTo(document, 'keydown', function(e) {
         var modsMatched = ((e.ctrlKey  == !!mods.ctrl) &&
                            (e.shiftKey == !!mods.shift) &&
                            (e.altKey   == !!mods.alt) &&
@@ -25,8 +25,13 @@ var forEach = function (array, callback, scope) {
     }
 };
 
-function listenTo(el, type, fn) {
-    el && el.addEventListener(type, fn);
+function listenTo(els, type, fn) {
+    if (!els) return;
+    if (els && els.nodeType) return listenTo([els], type, fn);
+
+    for (var i = 0; i < els.length; i++) {
+        els[i].addEventListener(type, fn);
+    }
 }
 
 function absHeight(el) {
@@ -50,11 +55,9 @@ document.addEventListener('DOMContentLoaded', function() {
     lexers.addEventListener('change', selectHotLang);
     selectHotLang();
 
-    forEach($qsa('.hot'), function(el) {
-        listenTo(el, 'click', function(e) {
-            lexers.value = e.target.getAttribute('rel');
-            text.focus();
-        });
+    listenTo($qsa('.hot'), 'click', function(e) {
+        lexers.value = e.target.rel;
+        text.focus();
     });
 
     listenTo($id('wrap'), 'click', function(e) {
@@ -63,14 +66,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // resize textarea to fill maximum area without adding a scrollbar
-    var newheight = window.innerHeight - absHeight(document.body) + absHeight(text);
-    if (newheight > absHeight(text)) {
-        text.style.height = newheight + 'px';
+    if (text) {
+        var newheight = window.innerHeight - absHeight(document.body) + absHeight(text);
+        if (newheight > absHeight(text)) {
+            text.style.height = newheight + 'px';
+        }
     }
 
     addShortcut(13, {ctrl: true}, function(e) { // ctrl+enter
-        if (!$('#text').val()) { return; }
-        $('form').submit();
+        if (!text.value.replace(/^\s+|\s+$/g, '')) { return; }
+        $qs('form') && $qs('form').submit();
     });
     addShortcut(74, {ctrl: true}, function() { // ctrl+j
         lexers.focus();
@@ -82,14 +87,12 @@ document.addEventListener('DOMContentLoaded', function() {
     hlter.run();
 
     // highlight hovered lines
-    $('.line').hover(
-        function() { $('#' + this.id).addClass('over'); },
-        function() { $('#' + this.id).removeClass('over'); }
-    );
-    $('.linenos a').hover(
-        function() { $('#' + this.rel).addClass('over'); },
-        function() { $('#' + this.rel).removeClass('over'); }
-    );
+    listenTo($qsa('.linenos a'), 'mouseover', function(e) {
+        $id(e.target.rel).classList.add('over');
+    });
+    listenTo($qsa('.linenos a'), 'mouseout', function(e) {
+        $id(e.target.rel).classList.remove('over');
+    });
 });
 
 hlter = {
@@ -105,29 +108,32 @@ hlter = {
     run: function() {
         var app = this;
         this.lineselection(true);
-        // this.check();
         this._interval = setInterval(function() {
             app.check.apply(app);
         }, this.run_interval_every);
 
-        $('.linenos a').disableTextSelect();
+        listenTo($qsa('.linenos a'), 'mousedown', function(e) {
+            if (e.which == 1) app.selectStart(this.rel);
+        });
+        listenTo($qsa('.linenos a'), 'mouseup', function(e) {
+            app.selectEnd(this.rel);
+        });
+        listenTo($qsa('.line'), 'mouseup', function(e) {
+            app.selectEnd(this.id);
+        });
 
-        $('.linenos a')
-            .mousedown(function(e) { if (e.which == 1) app.selectStart(this.rel); })
-            .mouseup(function() { app.selectEnd(this.rel); });
-        $('.line').mouseup(function() { app.selectEnd(this.id); });
-
-        $('.line').mousemove(function() { app.current = this.id; });
-        $('.linenos a').mousemove(function() { app.current = this.rel; });
+        listenTo($qsa('.line'), 'mousemove', function() { app.current = this.id; });
+        listenTo($qsa('.linenos a'), 'mousemove', function() { app.current = this.rel; });
 
         // yay bitwise :P
-        $(window).keydown(function(event) {
-            if (app.isModifier(event.keyCode)) {
-                app.modifier |= app.bit(event.keyCode);
+        listenTo(document, 'keydown', function(e) {
+            if (app.isModifier(e.keyCode)) {
+                app.modifier |= app.bit(e.keyCode);
             }
-        }).keyup(function(event) {
-            if (app.isModifier(event.keyCode)) {
-                app.modifier ^= app.bit(event.keyCode);
+        });
+        listenTo(document, 'keyup', function(e) {
+            if (app.isModifier(e.keyCode)) {
+                app.modifier ^= app.bit(e.keyCode);
             }
         });
     },
@@ -153,21 +159,29 @@ hlter = {
     },
 
     ongoingselection: function() {
-        $('.linenos a').removeClass('selecting');
+        forEach($qsa('.selecting'), function(el) {
+            el.classList.remove('selecting');
+        });
         if (!(this.selecting && this.current)) { return; }
 
-        var range = this.range(this.selecting, this.current, '#a-');
-        $(range.join(', ')).addClass('selecting');
+        var range = this.range(this.selecting, this.current, 'a-');
+        forEach(range, function(id) {
+            $id(id).classList.add('selecting');
+        });
     },
 
     lineselection: function(onload) {
-        $('.line, .linenos a').removeClass('selected');
+        forEach($qsa('.selected'), function(el) {
+            el.classList.remove('selected');
+        });
         var specifiers = this.location().split(',');
         var first;
         for (var i = 0, l = specifiers.length; i < l; i++) {
             var pair = this.getPair(specifiers[i]);
-            var range = this.range(pair[0], pair[1]);
-            $(range.join(', ')).addClass('selected');
+            var range = this.range(pair[0], pair[1], '');
+            forEach(range, function(id) {
+                $id(id).classList.add('selected');
+            });
 
             if (onload && (!first || first > pair[0])) {
                 first = pair[0];
@@ -175,14 +189,14 @@ hlter = {
         }
 
         if (onload && first) {
-            $('html').scrollTop($('#' + first).offset().top);
+            document.body.scrollTop += $id('' + first).getBoundingClientRect().top;
         }
     },
 
     int: function(v) { return parseInt(v, 10); },
 
     getPair: function(x) {
-        var pair = $.map(x.split(':'), this.int);
+        var pair = x.split(':').map(this.int);
         if (pair[0] > pair[1]) {
             return [pair[1], pair[0]];
         }
@@ -190,9 +204,17 @@ hlter = {
     },
 
     range: function(start, end, prefix) {
+        start = parseInt(start, 10);
+        end = parseInt(end, 10);
         if (!start) { return []; }
         if (!end) { end = start; }
-        if (!prefix) { prefix = '#'; }
+        if (prefix == undefined) { prefix = '#'; }
+
+        if (start > end) {
+            end += start;
+            start = end - start;
+            end = end - start;
+        }
 
         var range = [];
         for (var i = start; i <= end; i++) {
@@ -214,25 +236,3 @@ hlter = {
         }
     }
 };
-
-/* .disableTextSelect, version 2.0
-   Copyright (c) 2007 James Dempster
-   Copyright (c) 2009, 2015 Alexander Solovyov
-   under terms of MIT License
- */
-(function($) {
-    if (navigator.userAgent.match(/msie/)) {
-        $.fn.disableTextSelect = function() {
-            return this.each(function() {
-                $(this).bind('selectstart', function(e) { e.preventDefault(); });
-            });
-        };
-        $.fn.enableTextSelect = function() {
-            return this.each(function() { $(this).unbind('selectstart'); });
-        };
-    } else {
-        // handled through css, search for user-select
-        $.fn.disableTextSelect = function() {};
-        $.fn.enableTextSelect = function() {};
-    }
-})(jQuery);

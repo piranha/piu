@@ -30,7 +30,7 @@ td { padding: 1px 0; }
 .code { width: 100%; }
 .line { padding-left: 1em; }
 
-.over { background-color: #ffffe3; }
+.line:hover, .line.over { background-color: #ffffe3; }
 .selected { background-color: #fafab0; }
 .selecting { background-color: #b0b0fa; }
 

@@ -16,31 +16,57 @@ function addShortcut(keyCode, mods, callback) {
     });
 }
 
+var $id = function(x) { return document.getElementById(x); };
+var $qs = function(x) { return document.querySelector(x); };
+var $qsa = function(x) { return document.querySelectorAll(x); };
+var forEach = function (array, callback, scope) {
+    for (var i = 0; i < array.length; i++) {
+        callback.call(scope || array, array[i], i);
+    }
+};
+
+function listenTo(el, type, fn) {
+    el && el.addEventListener(type, fn);
+}
+
+function absHeight(el) {
+    if (el == document.body)
+        return Math.max(document.body.offsetHeight,
+                        document.documentElement.offsetHeight);
+    return parseInt(window.getComputedStyle(el).height, 10);
+}
+
+function selectHotLang() {
+    var selected = $qs('.hot.selected'),
+        next = $qs('.hot[rel=' + lexers.value + ']');
+    selected && selected.classList.remove('selected');
+    next && next.classList.add('selected');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-    var lexers = $('#lexers');
-    var text = $('#text');
+    var lexers = $id('lexers');
+    var text = $id('text');
 
-    lexers.change(function() {
-        $('.hot.selected').removeClass('selected');
-        $('.hot[rel=' + lexers.val() + ']').addClass('selected');
+    lexers.addEventListener('change', selectHotLang);
+    selectHotLang();
+
+    forEach($qsa('.hot'), function(el) {
+        listenTo(el, 'click', function(e) {
+            lexers.value = e.target.getAttribute('rel');
+            text.focus();
+        });
     });
 
-    $('span.hot').click(function() {
-        lexers.val($(this).attr('rel')).change();
-        text.focus();
-    });
-
-    $('#wrap').click(function(e) {
+    listenTo($id('wrap'), 'click', function(e) {
         e.preventDefault();
-        $('html').toggleClass('wrap');
+        $id('html').classList.toggle('wrap');
     });
-
-    lexers.change();
 
     // resize textarea to fill maximum area without adding a scrollbar
-    var newheight = $(window).height() - $('html').height() + text.height();
-    if (newheight > text.height())
-        text.height(newheight);
+    var newheight = window.innerHeight - absHeight(document.body) + absHeight(text);
+    if (newheight > absHeight(text)) {
+        text.style.height = newheight + 'px';
+    }
 
     addShortcut(13, {ctrl: true}, function(e) { // ctrl+enter
         if (!$('#text').val()) { return; }

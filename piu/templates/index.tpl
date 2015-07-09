@@ -29,7 +29,7 @@
   <span class="note">(or press Ctrl-Enter)</span>
 </form>
 <script type="text/javascript">
-  $(document).ready(function() {
+  document.addEventListener('DOMContentLoaded', function() {
       if (!("autofocus" in document.createElement("input"))) {
           document.getElementById("text").focus();
       }

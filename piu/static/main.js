@@ -16,7 +16,7 @@ function addShortcut(keyCode, mods, callback) {
     });
 }
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function() {
     var lexers = $('#lexers');
     var text = $('#text');
 

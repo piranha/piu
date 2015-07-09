@@ -1,3 +1,21 @@
+// finding out keyCode:
+// http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
+
+function addShortcut(keyCode, mods, callback) {
+    mods = mods || {};
+    document.addEventListener('keydown', function(e) {
+        var modsMatched = ((e.ctrlKey  == !!mods.ctrl) &&
+                           (e.shiftKey == !!mods.shift) &&
+                           (e.altKey   == !!mods.alt) &&
+                           (e.metaKey  == !!mods.meta));
+        var received = e.keyCode !== undefined ? e.keyCode : e.which;
+        if (modsMatched && received == keyCode) {
+            callback(e);
+            e.preventDefault();
+        }
+    });
+}
+
 $(document).ready(function() {
     var lexers = $('#lexers');
     var text = $('#text');
@@ -24,12 +42,16 @@ $(document).ready(function() {
     if (newheight > text.height())
         text.height(newheight);
 
-    shortcut.add('ctrl+enter', function() {
+    addShortcut(13, {ctrl: true}, function(e) { // ctrl+enter
         if (!$('#text').val()) { return; }
         $('form').submit();
     });
-    shortcut.add('ctrl+j', function() { lexers.focus(); });
-    shortcut.add('ctrl+n', function() { document.location.href = '/'; });
+    addShortcut(74, {ctrl: true}, function() { // ctrl+j
+        lexers.focus();
+    });
+    addShortcut(78, {ctrl: true}, function() { // ctrl+n
+        document.location.href = '/';
+    });
 
     hlter.run();
 
@@ -37,11 +59,11 @@ $(document).ready(function() {
     $('.line').hover(
         function() { $('#' + this.id).addClass('over'); },
         function() { $('#' + this.id).removeClass('over'); }
-        );
+    );
     $('.linenos a').hover(
         function() { $('#' + this.rel).addClass('over'); },
         function() { $('#' + this.rel).removeClass('over'); }
-        );
+    );
 });
 
 hlter = {

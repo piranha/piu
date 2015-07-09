@@ -19,7 +19,7 @@
     <span class="hot" rel="css">CSS</span> |
     <span class="hot" rel="html">HTML</span> |
     <span class="hot" rel="django">Django/Jinja</span>
-    <span class="note">(press Ctrl-J to select from keyboard)</span>
+    <span class="note">(press Ctrl-J to put focus on selectbox)</span>
   </div>
 
   <div>
@@ -28,7 +28,7 @@
   <input type="submit" value="Paste!">
   <span class="note">(or press Ctrl-Enter)</span>
 </form>
-<script>
+<script type="text/javascript">
   $(document).ready(function() {
       if (!("autofocus" in document.createElement("input"))) {
           document.getElementById("text").focus();

@@ -56,7 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
     selectHotLang();
 
     listenTo($qsa('.hot'), 'click', function(e) {
+        e.preventDefault();
         lexers.value = e.target.rel;
+        selectHotLang();
         text.focus();
     });
 

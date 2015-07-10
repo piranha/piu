@@ -11,14 +11,14 @@
       {%- endfor %}
     </select>
 
-    <span class="hot" rel="guess">Guess</span> |
-    <span class="hot" rel="text">Text</span> |
-    <span class="hot" rel="python">Python</span> |
-    <span class="hot" rel="js">JavaScript</span> |
-    <span class="hot" rel="rb">Ruby</span> |
-    <span class="hot" rel="css">CSS</span> |
-    <span class="hot" rel="html">HTML</span> |
-    <span class="hot" rel="django">Django/Jinja</span>
+    <a class="hot" href="#" rel="guess">Guess</a> |
+    <a class="hot" href="#" rel="text">Text</a> |
+    <a class="hot" href="#" rel="python">Python</a> |
+    <a class="hot" href="#" rel="js">JavaScript</a> |
+    <a class="hot" href="#" rel="rb">Ruby</a> |
+    <a class="hot" href="#" rel="css">CSS</a> |
+    <a class="hot" href="#" rel="html">HTML</a> |
+    <a class="hot" href="#" rel="django">Django/Jinja</a>
     <span class="note">(press Ctrl-J to put focus on selectbox)</span>
   </div>
 

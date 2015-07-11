@@ -3,6 +3,10 @@
 
 ;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
 
+;;; Author: Alexander Solovyov
+;;; Version: 1.0
+;;; URL: http://paste.in.ua/piu.el
+
 ;;; Commentary:
 ;;;
 ;;; Add autoload to your configuration file:
@@ -33,7 +37,7 @@
     (cs-mode . "csharp")
     (js2-mode . "js")))
 
-;;;##autoload
+;;;###autoload
 (defun piu ()
   "Paste either buffer or region if active."
   (interactive)

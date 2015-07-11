@@ -1,4 +1,4 @@
-;;; piu.el - interface to paste.in.ua
+;;; piu.el --- interface to paste.in.ua
 ;;; -*- mode: emacs-lisp -*-
 
 ;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
@@ -18,22 +18,24 @@
 ;;;
 ;;; In either case url of pasted text is left on the kill ring, the paste buffer
 ;;; and (probably) copied to system buffer.
+;;;
+;;; Code:
 
-
-(defvar piu-url "http://paste.in.ua/" "paste.in.ua url")
+(defvar piu-url "http://paste.in.ua/"
+  "Url to paste.in.ua or compatible service.")
 
 (defvar piu-types
   '((nxml-mode . "xml")
     (emacs-lisp-mode . "common-lisp")
-    (scheme-mode . "common-lisp")
     (c++-mode . "cpp")
     (conf-windows-mode . "ini")
     (conf-unix-mode . "ini")
     (cs-mode . "csharp")
     (js2-mode . "js")))
 
+;;;##autoload
 (defun piu ()
-  "Paste either buffer or region if active"
+  "Paste either buffer or region if active."
   (interactive)
   (let* ((region (if (use-region-p) (cons (region-beginning) (region-end))
                   (cons (point-min) (point-max))))
@@ -52,7 +54,7 @@
                   (lambda (arg)
                     (cond
                      ((equal :error (car arg))
-                      (signal (cdr arg)))
+                      (signal 'piu-error (cdr arg)))
                      ((equal :redirect (car arg))
                       (with-temp-buffer
                         (insert (cadr arg))

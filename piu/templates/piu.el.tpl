@@ -4,7 +4,7 @@
 ;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
 
 ;;; Author: Alexander Solovyov
-;;; Version: 1.0
+;;; Version: 1.1
 ;;; URL: http://paste.in.ua/piu.el
 
 ;;; Commentary:
@@ -28,7 +28,7 @@
 (defvar piu-url "http://paste.in.ua/"
   "Url to paste.in.ua or compatible service.")
 
-(defvar piu-types
+(defvar piu-lexers
   '((nxml-mode . "xml")
     (emacs-lisp-mode . "common-lisp")
     (c++-mode . "cpp")
@@ -37,34 +37,44 @@
     (cs-mode . "csharp")
     (js2-mode . "js")))
 
+(defun lexer-name ()
+  "Return lexer name based on current major mode and 'piu-lexers'."
+  (or (assoc-default major-mode piu-lexers)
+      (replace-regexp-in-string
+       "-" "" (substring (symbol-name major-mode) 0 -5))))
+
+(defun piu-post (text)
+  "Post TEXT to paste.in.ua."
+  (let ((url-request-method "POST")
+        (url-request-extra-headers
+         '(("Content-Type" . "application/x-www-form-urlencoded")))
+        (url-request-data
+         (format "lexer=%s&data=%s"
+                 (url-hexify-string (lexer-name))
+                 (url-hexify-string text))))
+    (url-retrieve
+     piu-url
+     (lambda (status)
+       (cond
+        ((equal :error (car status))
+         (message "request failure! %s" (cdr status)))
+        ((equal :redirect (car status))
+         (let ((paste-url (cadr status)))
+           (kill-new paste-url)
+           (message "%s, copied to clipboard" paste-url))))))))
+
 ;;;###autoload
-(defun piu ()
-  "Paste either buffer or region if active."
-  (interactive)
-  (let* ((region (if (use-region-p) (cons (region-beginning) (region-end))
-                  (cons (point-min) (point-max))))
-         (url-request-method "POST")
-         (url-request-extra-headers
-          '(("Content-Type" . "application/x-www-form-urlencoded")))
-         (url-request-data
-          (format "lexer=%s&data=%s"
-                  (url-hexify-string
-                   (or (assoc-default major-mode piu-types)
-                       (replace-regexp-in-string
-                        "-" "" (substring (symbol-name major-mode) 0 -5))))
-                  (url-hexify-string
-                   (buffer-substring-no-properties (car region) (cdr region))))))
-    (url-retrieve piu-url
-                  (lambda (arg)
-                    (cond
-                     ((equal :error (car arg))
-                      (signal 'piu-error (cdr arg)))
-                     ((equal :redirect (car arg))
-                      (with-temp-buffer
-                        (insert (cadr arg))
-                        (clipboard-kill-ring-save (point-min) (point-max))
-                        (message "%s, copied to clipboard"
-                                 (buffer-substring-no-properties (point-min) (point-max))))))))))
+(defun piu (start end)
+  "Paste the region (or whole buffer) to paste.in.ua.
+
+URL returned is saved to 'kill-ring' (and, hopefully, to system buffer)."
+  (interactive
+   (if mark-active
+       (list (region-beginning) (region-end))
+     (list (point-min) (point-max))))
+  (let ((selection (buffer-substring-no-properties start end)))
+    (message "posting...")
+    (piu-post selection)))
 
 (provide 'piu)
 ;;; piu.el ends here

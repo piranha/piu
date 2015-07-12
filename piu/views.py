@@ -66,9 +66,12 @@ def index():
 
 @route('/', method='POST')
 def new():
-    data = dec(request.POST.get('data'))
+    if not request.POST.get('data'):
+        abort(400, "You have to supply 'data' field")
+
+    data = dec(request.POST['data'])
     if not data:
-        return redirect('/', 302)
+        abort(400, "Empty 'data' field")
 
     if SPAMRE.search(data):
         abort(402, 'Wanna spam? Pay me money! ;)')
@@ -76,7 +79,7 @@ def new():
     lexer = request.POST.get('lexer', 'guess')
     item = store.new()
     paste(item, data, lexer)
-    return redirect('/%s/' % item.id, 302)
+    return redirect('/%s/' % item.id, 303)
 
 
 @route('/:id')

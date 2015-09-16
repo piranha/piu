@@ -1,7 +1,7 @@
 ;;; piu.el --- interface to paste.in.ua
 ;;; -*- mode: emacs-lisp -*-
 
-;;; Copyright (c) 2010 Alexander Solovyov under new BSD License
+;;; Copyright (c) 2010, 2015 Alexander Solovyov under new BSD License
 
 ;;; Author: Alexander Solovyov
 ;;; Version: 1.1

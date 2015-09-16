@@ -30,12 +30,11 @@
   drag to highlight range; hold shift to select few</span>
 
 <script type="text/javascript">
-  $('select').on('change', function(e) {
-    var target = $(e.target);
-    var selected = $('[selected]', e.target);
-    if (target.val() != selected.val()) {
-      window.location.search = "?as=" + target.val();
-    }
+  var lexers = $id('lexers');
+  var currentLexer = lexers.value;
+  lexers.addEventListener('change', function(e) {
+    if (currentLexer != lexers.value)
+      window.location.search = "?as=" + selected.value;
   });
 </script>
 {% endblock %}

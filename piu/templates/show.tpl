@@ -34,7 +34,7 @@
   var currentLexer = lexers.value;
   lexers.addEventListener('change', function(e) {
     if (currentLexer != lexers.value)
-      window.location.search = "?as=" + selected.value;
+      window.location.search = "?as=" + lexers.value;
   });
 </script>
 {% endblock %}

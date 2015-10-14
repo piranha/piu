@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     listenTo($id('wrap'), 'click', function(e) {
         e.preventDefault();
-        $id('html').classList.toggle('wrap');
+        $id('content').classList.toggle('wrap');
     });
 
     // resize textarea to fill maximum area without adding a scrollbar

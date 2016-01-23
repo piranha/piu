@@ -2,13 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <title>paste.in.ua</title>
   <link rel="stylesheet" href="/static/main.css">
   <link rel="stylesheet" href="/static/styles/default.css">
   <script src="/static/main.js"></script>
+  {% block extrahead %}{% endblock %}
 </head>
 <body>
   <header>
@@ -19,7 +17,7 @@
 
   <div id="footer">
     <p>
-      &#169; 2009-2015 <a href="http://solovyov.net/">Alexander Solovyov</a>,
+      &#169; 2009-2016 <a href="http://solovyov.net/">Alexander Solovyov</a>,
       <a href="/about/">about</a>
     </p>
   </div>
@@ -33,6 +31,5 @@
   ga('create', 'UA-317760-7', 'auto');
   ga('send', 'pageview');
 </script>
-
 </body>
 </html>

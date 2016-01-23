@@ -1,22 +1,27 @@
 {% extends "base" %} {# -*- mode: django-html -*- #}
 
+{% block extrahead %}
+<style>
+  body { max-width: 60em; margin-right: auto; margin-left: auto; }
+</style>
+{% endblock %}
+
 {% block content %}
-<p>That's a simple pastebin, don't hesitate to use it. ;-) In case you want your
+<p>That's a little simple pastebin, open for everyone. In case you want your
   own, sources are on <a href="https://github.com/piranha/piu">Github</a>.</p>
 
 <h2 id="selections"><a href="#selections">Selections</a></h2>
 
-<p>This is neat unique feature - if you have <code>'#l-num'</code> in url,
+<p>There is a neat unique feature - if you have <code>'#{number}'</code> in url,
   corresponding line will be highlighted. Of course, you can get such url just
   by clicking on line number.</p>
 <p>But more than that, if you will try to select some line numbers with mouse
   (it's ok to finish selection on line itself, not on line number), you'll end
-  with something like <code>'#l-num1:l-num2'</code> in url and corresponding
-  lines highlighted.</p>
-<p>And finally, we've got an awesome feature - you can select few such ranges
-  (or supply them by hands in URL, of course ;-). Just press and hold Control or
-  Shift when selecting new range and instead of replacing it will be added to
-  your current ranges</p>
+  with something like <code>'#{number1}:{number2}'</code> in url and
+  corresponding lines highlighted.</p>
+<p>And finally, another awesome feature - you can select few such ranges. Just
+  press and hold Shift when selecting a new range and instead of replacing it
+  will be added to your current range.</p>
 
 <h2 id="shortcuts"><a href="#shortcuts">Shortcuts</a></h2>
 
@@ -38,13 +43,21 @@
 <p>If you have pasted JSON, you'll have option to prettify it (look at top-right
   corner). Just in case you have some ugly one.</p>
 
+<h2 id="ansi"><a href="#ansi">ANSI</a></h2>
+
+<p>There is a highlight type called <a href="/?lexer=ansi"><code>ANSI</code></a>,
+  which will convert your
+  <a href="https://en.wikipedia.org/wiki/ANSI_escape_code">ANSI color codes</a>
+  into HTML (even without <code>\033</code> escape code, so copy-paste
+  from terminal is OK).</p>
+
 <h2 id="api"><a href="#api">API</a></h2>
 
 <p>
   API is dead simple, it's just a POST request to
-  a <code>'http://paste.in.ua/'</code> with single required parameter -
+  an <code>'http://paste.in.ua/'</code> with single required parameter -
   <code>'data'</code>. Supply a <code>'lexer'</code> to choose a lexer; it's
-  default to <code>'guess'</code>.
+  default to <code>'guess'</code> (which is not perfect by any means).
 </p>
 
 <h2 id="tools"><a href="#tools">Tools</a></h2>
@@ -75,5 +88,4 @@
 <p>Also we have small nice <a href="/piu.el">piece of code</a> for Emacs;
 download and put it somewhere in your Emacs' <code>'load-path'</code>. Comments
 about usage are inside the file itself.</p>
-
 {% endblock %}

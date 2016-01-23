@@ -7,21 +7,21 @@
       <option value="">View as</option>
       {%- for alias, name in lexers %}
       <option value="{{ alias }}"
-              {%- if alias in lexer.aliases %} selected{% endif %}>{{ name }}</option>
+              {%- if alias == lexer %} selected{% endif %}>{{ name }}</option>
       {%- endfor %}
     </select> |
 
     {% if owner -%}
     <a id="edit" href="/{{ item.id }}/edit/">edit your code</a> |
     {%- endif %}
-    {% if lexer.name == "JSON" -%}
+    {% if lexer == "JSON" -%}
     <a href="?pretty">pretty-format JSON</a> |
     {%- endif %}
     <a id="wrap" href="#">toggle wrap</a> |
     <a href="/{{ item.id }}/raw/">raw</a>
   </span>
 <span>Pasted at <time datetime="{{ date.isoformat() }}">{{ date }}</time></span> |
-<span>Highlighted as {{ lexer.name }}</span>
+<span>Highlighted as {{ lexer }}</span>
 </div>
 
 {{ item['html'] }}
@@ -33,8 +33,9 @@
   var lexers = $id('lexers');
   var currentLexer = lexers.value;
   lexers.addEventListener('change', function(e) {
-    if (currentLexer != lexers.value)
-      window.location.search = "?as=" + lexers.value;
+    if (currentLexer != lexers.value) {
+      window.location.search = "?as=" + encodeURIComponent(lexers.value);
+    }
   });
 </script>
 {% endblock %}

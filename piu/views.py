@@ -11,7 +11,7 @@ from bottle import route, request, redirect, static_file, response, abort
 from bottle import jinja2_template as template
 
 from piu import store
-from piu.utils import highlight, style, lexerlist, dec
+from piu.utils import highlight, ansi2html, style, lexerlist, dec
 from piu.utils import toepoch, fromepoch
 
 
@@ -60,8 +60,10 @@ def static(name):
 
 @route('/')
 def index():
-    return template('index', lexers=lexerlist(),
-                    deflexer=request.cookies.get("lexer", "guess"))
+    lexer = (request.GET.get('lexer') or
+             request.cookies.get('lexer') or
+             'guess')
+    return template('index', lexers=lexerlist(), deflexer=lexer)
 
 
 @route('/', method='POST')
@@ -96,16 +98,17 @@ def show(id):
 
     owner = bool(request.get_cookie('edit-%s' % id, '', secret=SECRET))
 
-    lexername = request.GET.get('as') or item['lexer']
-    lexer = lexers.get_lexer_by_name(lexername)
+    lexer = request.GET.get('as') or item['lexer']
 
-    if 'pretty' in request.GET and lexer.name == 'JSON':
+    if lexer == 'ansi':
+        item['html'] = ansi2html(item['raw'])
+    elif lexer == 'json' and 'pretty' in request.GET:
         try:
             data = json.dumps(json.loads(item['raw']), sort_keys=True, indent=4)
             item['html'] = highlight(data, lexer)[0]
         except ValueError:
             pass
-    elif lexername != item['lexer']:
+    elif lexer != item['lexer']:
         item['html'] = highlight(item['raw'], lexer)[0]
 
     return template('show', item=item, owner=owner, lexer=lexer,

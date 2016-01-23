@@ -11,7 +11,7 @@ LEXERMAP = {'emacs-lisp': 'common-lisp',
             'nxml': 'xml',
             'c++': 'cpp'}
 
-URI = 'http://paste.in.ua/'
+URI = 'https://paste.in.ua/'
 mode_re = re.compile('-\*-.*mode: (?P<mode>[\w\.\-]+).*-\*-', re.I)
 
 def findlexer(fn, default=None):
@@ -22,13 +22,17 @@ def findlexer(fn, default=None):
     return default
 
 def guess_lexer(data, default):
-    lines = data.splitlines()
-    {##}# shebang
-    try:
-        line = lines[0]
-    except IndexError:
+    if not data.strip():
         print 'abort: no data'
         sys.exit(1)
+
+    if '\033' in data:
+        return 'ansi'
+
+    lines = data.splitlines()
+
+    {##}# shebang
+    line = lines[0]
     if line.startswith('#!'):
         executable = os.path.basename(line.split()[0][2:])
         if executable == 'env':

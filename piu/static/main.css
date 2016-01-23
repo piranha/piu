@@ -35,7 +35,7 @@ td { padding: 1px 0; }
 
 .meta { background-color: #f5f5f5; padding: 0.5em;
         border-top: 1px dashed #bbb; border-bottom: 1px dashed #bbb; }
-.note { color: grey; padding: 1px 0; }
+.note { color: grey; padding: 0.1em 0.5em; }
 .right { float: right; }
 
 #footer { border-top: solid 1px; background-color: #f5f5f5; margin: 1em 0 0 0;

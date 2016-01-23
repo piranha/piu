@@ -6,8 +6,7 @@ import os, sys, urllib, re
 
 EXTMAP = {{ extmap }}
 LEXERS = {{ lexers }}
-LEXERMAP = {'emacs-lisp': 'common-lisp',
-            'scheme': 'common-lisp',
+LEXERMAP = {'emacs-lisp': 'emacs',
             'nxml': 'xml',
             'c++': 'cpp'}
 

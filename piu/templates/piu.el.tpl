@@ -30,7 +30,7 @@
 
 (defvar piu-lexers
   '((nxml-mode . "xml")
-    (emacs-lisp-mode . "common-lisp")
+    (emacs-lisp-mode . "emacs")
     (c++-mode . "cpp")
     (conf-windows-mode . "ini")
     (conf-unix-mode . "ini")

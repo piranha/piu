@@ -13,8 +13,7 @@ p { line-height: 1.2em; }
 .hot.selected { border-bottom: none; }
 
 input[type="submit"] { font-size: 1.5em; width: 5em; }
-#text { width: 100%; height: 20em; margin: 0.5em 0; border-radius: 5px;
-        -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+#text { width: 100%; height: 20em; margin: 0.5em 0; border-radius: 5px; }
 .highlighttable pre { line-spacing: 125%; margin: 0; } /* fix ie */
 .highlighttable { border-spacing: 0; width: 100%; }
 

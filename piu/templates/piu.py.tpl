@@ -6,9 +6,9 @@ import os, sys, urllib, re
 
 EXTMAP = {{ extmap }}
 LEXERS = {{ lexers }}
+
 LEXERMAP = {'emacs-lisp': 'emacs',
-            'nxml': 'xml',
-            'c++': 'cpp'}
+            'nxml': 'xml'}
 
 URI = 'https://paste.in.ua/'
 mode_re = re.compile('-\*-.*mode: (?P<mode>[\w\.\-]+).*-\*-', re.I)

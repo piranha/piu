@@ -153,10 +153,10 @@ def edit(id):
 def piu():
     lexdict = {}
     lexlist = []
-    for _, names, fnames, _ in lexers.get_all_lexers():
-        lexlist.extend(names)
+    for aliases, fnames in lexerlist(with_fnames=True):
+        lexlist.extend(aliases)
         for fn in fnames:
-            lexdict[fn] = names[0]
+            lexdict[fn] = aliases[0]
     response.content_type = 'text/plain'
     return template('piu.py', extmap=lexdict, lexers=lexlist)
 

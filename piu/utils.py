@@ -35,10 +35,13 @@ def style():
     f = formatters.HtmlFormatter()
     return f.get_style_defs('.code')
 
-def lexerlist():
-    lst = list(lexers.get_all_lexers()) + [('ANSI', ['ansi'], None, None)]
-    for name, alias, _, _ in sorted(lst):
-        yield alias[0], name
+def lexerlist(with_fnames=False):
+    lst = list(lexers.get_all_lexers()) + [('ANSI', ['ansi'], [], None)]
+    for name, aliases, fnames, _ in sorted(lst):
+        if with_fnames:
+            yield aliases, fnames
+        else:
+            yield aliases[0], name
 
 def linenos(linecount):
     lines = []

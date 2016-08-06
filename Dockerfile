@@ -1,6 +1,6 @@
 FROM python:2-alpine
 
-RUN apk add --no-cache ca-certificates gcc && update-ca-certificates
+RUN apk add --no-cache ca-certificates gcc python-dev && update-ca-certificates
 
 RUN mkdir /app
 WORKDIR /app

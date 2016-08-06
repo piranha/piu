@@ -1,6 +1,6 @@
-FROM python:2-alpine
+FROM alpine
 
-RUN apk add --no-cache ca-certificates gcc python-dev && update-ca-certificates
+RUN apk add --no-cache curl tar xz ca-certificates gcc python python-dev && update-ca-certificates
 
 RUN mkdir /app
 WORKDIR /app

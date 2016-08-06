@@ -1,5 +1,7 @@
 FROM python:2-alpine
 
+RUN apk add --no-cache ca-certificates && update-ca-certificates
+
 RUN mkdir /app
 WORKDIR /app
 COPY . /app/

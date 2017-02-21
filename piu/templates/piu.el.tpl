@@ -25,8 +25,10 @@
 ;;;
 ;;; Code:
 
-(defvar piu-url "http://paste.in.ua/"
+
+(defvar piu-url "https://paste.in.ua/"
   "Url to paste.in.ua or compatible service.")
+
 
 (defvar piu-lexers
   '((nxml-mode . "xml")
@@ -36,11 +38,13 @@
     (cs-mode . "csharp")
     (js2-mode . "js")))
 
+
 (defun lexer-name ()
   "Return lexer name based on current major mode and 'piu-lexers'."
   (or (assoc-default major-mode piu-lexers)
       (replace-regexp-in-string
        "-" "" (substring (symbol-name major-mode) 0 -5))))
+
 
 (defun piu-post (text)
   "Post TEXT to paste.in.ua."
@@ -51,16 +55,20 @@
          (format "lexer=%s&data=%s"
                  (url-hexify-string (lexer-name))
                  (url-hexify-string text))))
-    (url-retrieve
-     piu-url
-     (lambda (status)
-       (cond
-        ((equal :error (car status))
-         (message "request failure! %s" (cdr status)))
-        ((equal :redirect (car status))
-         (let ((paste-url (cadr status)))
-           (kill-new paste-url)
-           (message "%s, copied to clipboard" paste-url))))))))
+    (url-retrieve piu-url 'piu-post-callback)))
+
+
+(defun piu-post-callback (status)
+  "Process POST results"
+  (cond
+   ((equal :error (car status))
+    (message "request failure! %s" (cdr status)))
+
+   ((equal :redirect (car status))
+    (let ((paste-url (cadr status)))
+      (kill-new paste-url)
+      (message "%s, copied to clipboard" paste-url)))))
+
 
 ;;;###autoload
 (defun piu (start end)
@@ -74,6 +82,7 @@ URL returned is saved to 'kill-ring' (and, hopefully, to system buffer)."
   (let ((selection (buffer-substring-no-properties start end)))
     (message "posting...")
     (piu-post selection)))
+
 
 (provide 'piu)
 ;;; piu.el ends here

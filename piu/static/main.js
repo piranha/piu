@@ -75,10 +75,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    addShortcut(13, {ctrl: true}, function(e) { // ctrl+enter
+    function submit(e) {
         if (!text.value.replace(/^\s+|\s+$/g, '')) { return; }
         $qs('form') && $qs('form').submit();
-    });
+    };
+
+    addShortcut(13, {ctrl: true}, submit); // ctrl+enter
+    addShortcut(13, {meta: true}, submit); // cmd+enter
     addShortcut(74, {ctrl: true}, function() { // ctrl+j
         lexers.focus();
     });

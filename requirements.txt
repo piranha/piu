@@ -1,7 +1,9 @@
 opster==4.1
 tnetstring==0.2.1
+bleach==2.1.2
 # from packages, see Dockerfile
 bottle==0.12.13
-tornado==4.5.1
+tornado==4.5.2
 Pygments==2.2.0
 jinja2==2.9.6
+markdown==2.6.9

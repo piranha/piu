@@ -9,6 +9,8 @@ from datetime import datetime as dt
 from pygments import lexers
 from bottle import route, request, redirect, static_file, response, abort
 from bottle import jinja2_template as template
+import markdown
+import bleach
 
 from piu import store
 from piu.utils import highlight, ansi2html, style, lexerlist, dec
@@ -125,6 +127,29 @@ def show_raw(id):
     ctype = request.GET.get('as', 'text/plain')
     response.content_type = '%s; charset=utf-8' % ctype
     return item['raw'].encode('utf-8')
+
+
+ALLOWED_TAGS = 'a abbr acronym b blockquote code em i li ol strong ul pre p h1 h2 h3 h4 h5 h6'.split()
+ALLOWED_ATTRS = {'a': ['href', 'title'],
+                 'img': ['src'],
+                 'abbr': ['title'],
+                 'acronym': ['title']}
+
+
+@route('/:id/render/')
+def render_markdown(id):
+    try:
+        item = store[int(id)]
+    except (ValueError, KeyError):
+        return redirect('/', 302)
+
+    response.content_type = 'text/html; charset=utf-8'
+    md = markdown.markdown(item['raw'],
+                           extensions=['markdown.extensions.fenced_code'])
+    html = bleach.clean(md,
+                        tags=ALLOWED_TAGS,
+                        attributes=ALLOWED_ATTRS)
+    return template('render', html=html)
 
 
 @route('/:id/edit/')

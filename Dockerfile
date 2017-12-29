@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM alpine:3.7
 
 RUN apk add --no-cache gcc musl-dev python2 python2-dev \
     py2-pip py2-pygments py2-bottle py2-tornado py2-jinja2

@@ -14,9 +14,15 @@
     {% if owner -%}
     <a id="edit" href="/{{ item.id }}/edit/">edit your code</a> |
     {%- endif %}
+
     {% if lexer == "JSON" -%}
     <a href="?pretty">pretty-format JSON</a> |
     {%- endif %}
+
+    {% if lexer == "md" or lexer == "html" -%}
+    <a href="render/">render content as HTML</a> |
+    {%- endif %}
+
     <a id="wrap" href="#">toggle wrap</a> |
     <a href="/{{ item.id }}/raw/">raw</a>
   </span>

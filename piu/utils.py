@@ -2,7 +2,6 @@ import StringIO
 from datetime import datetime as dt
 
 from pygments import lexers, formatters, highlight as highlight_
-from pygments.lexer import Lexer
 
 import piu.ansi2html as _ansi2html
 
@@ -36,8 +35,9 @@ def style():
     return f.get_style_defs('.code')
 
 def lexerlist(with_fnames=False):
-    lst = list(lexers.get_all_lexers()) + [('ANSI', ['ansi'], [], None)]
-    for name, aliases, fnames, _ in sorted(lst):
+    lst = list(lexers.get_all_lexers())
+    lst.append(('ANSI', ['ansi'], [], None))
+    for name, aliases, fnames, _ in sorted(lst, key=lambda x: x[0].lower()):
         if with_fnames:
             yield aliases, fnames
         else:

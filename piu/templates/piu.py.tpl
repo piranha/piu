@@ -56,7 +56,7 @@ def guess_lexer(data, default):
     return default
 
 def print_lexers(*args, **kwargs):
-    print '\n'.join(sorted(LEXERS))
+    print '\n'.join(LEXERS)
     sys.exit()
 
 def paste(data, lexer):

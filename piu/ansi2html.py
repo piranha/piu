@@ -1,40 +1,70 @@
+"""
+Code inspired by https://github.com/lambdaisland/ansi
+"""
 import re
 
-COLOR_DICT = {
-     '2': [(160, 160, 160), (128,   0,   0)],
-    '30': [(  0,   0,   0), (128,   0,   0)],
-    '31': [(160,   0,   0), (128,   0,   0)],
-    '32': [(  0, 160,   0), (  0, 128,   0)],
-    '33': [(160, 160,   0), (128, 128,   0)],
-    '34': [(  0,   0, 160), (  0,   0, 128)],
-    '35': [(160,   0, 160), (128,   0, 128)],
-    '36': [(  0, 160, 160), (  0, 128, 128)],
-    '37': [(160, 160, 160), (160, 160, 160)],
+def t(s):
+    return tuple(s.split())
+
+# https://en.wikipedia.org/wiki/ANSI_escape_code#3/4_bit
+COLORS = {
+    0: t('  0   0   0'),
+    1: t('194  54  33'),
+    2: t(' 37 188  36'),
+    3: t('173 173  39'),
+    4: t(' 73  46 225'),
+    5: t('211  56 211'),
+    6: t(' 51 187 200'),
+    7: t('203 204 205'),
 }
 
-COLOR_REGEX = re.compile(r'\[(?P<a1>\d+)(;(?P<a2>\d+)(;(?P<a3>\d+))?)?m')
+BRIGHT = {
+    0: t('129 131 131'),
+    1: t('252  57  31'),
+    2: t(' 49 231  34'),
+    3: t('234 236  35'),
+    4: t(' 88  51 255'),
+    5: t('249  53 248'),
+    6: t(' 20 240 240'),
+    7: t('233 235 235'),
+}
 
+
+COLOR_RE = re.compile('\033\\[([^m]+)m')
 BOLD = 'font-weight: bolder'
-COLOR = 'color: rgb%s'
-TEMPLATE = '<span style="%s">'
+
+
+def color(n):
+    if 30 <= n <= 37:
+        return 'color: rgb(%s, %s, %s)' % COLORS[n - 30]
+    if n == 39: # default foreground
+        return 'color: inherit'
+    if 40 <= n <= 47:
+        return 'background-color: rgb(%s, %s, %s)' % COLORS[n - 40]
+    if n == 49: # default background
+        return 'background-color: inherit'
+    if 90 <= n <= 97: # bright foreground
+        return 'color: rgb(%s, %s, %s)' % BRIGHT[n - 90]
+    if 100 <= n <= 107: # bright foreground
+        return 'background-color: rgb(%s, %s, %s)' % BRIGHT[n - 100]
+
 
 def ansi2html(text):
-    text = text.replace('[m', '</span>').replace('[0m', '</span>')
+    def sub(match):
+        codes = map(int, match.group(1).split(';'))
 
-    def single_sub(match):
-        args = match.groupdict()
-        a1, a2, a3 = args['a1'], args['a2'], args['a3']
-        bold = '1' in [a1, a2, a3]
-        color = COLOR_DICT.get(a1) or COLOR_DICT.get(a2) or COLOR_DICT.get(a3)
+        attrs = []
+        for code in codes:
+            if code == 0:
+                return '</span>'
+            elif code == 1:
+                attrs.append(BOLD)
+            else:
+                attrs.append(color(code))
 
-        styles = []
-        if bold:
-            styles.append(BOLD)
-        if color:
-            styles.append(COLOR % (color[bold], ))
-        return TEMPLATE % (';'.join(styles))
+        return '<span style="%s">' % ';'.join(attrs)
 
-    result = COLOR_REGEX.sub(single_sub, text)
+    result = COLOR_RE.sub(sub, text)
     return ''.join(
         '<div class="line" id="%s">%s</div>' % (i + 1, (item or '&#13;'))
         for i, item in enumerate(result.splitlines()))

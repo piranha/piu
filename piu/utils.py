@@ -5,14 +5,18 @@ from pygments import lexers, formatters, highlight as highlight_
 
 import piu.ansi2html as _ansi2html
 
+
 def dec(s):
     return s.decode('utf-8')
+
 
 def toepoch(dt):
     return dt.strftime('%s')
 
+
 def fromepoch(s):
     return dt.fromtimestamp(int(s))
+
 
 def highlight(code, lexer=None):
     if lexer == 'ansi':
@@ -30,9 +34,11 @@ def highlight(code, lexer=None):
 
     return highlight_(code, lexer, formatter), lexer.aliases[0]
 
+
 def style():
     f = formatters.HtmlFormatter()
     return f.get_style_defs('.code')
+
 
 def lexerlist(with_fnames=False):
     lst = list(lexers.get_all_lexers())
@@ -43,11 +49,13 @@ def lexerlist(with_fnames=False):
         else:
             yield aliases[0], name
 
+
 def linenos(linecount):
     lines = []
     for i in range(1, 1 + linecount):
         lines.append('<a rel="%d" id="a-%d">%d</a>' % (i, i, i))
     return ''.join(lines) # no newline so they can be displayed as blocks
+
 
 def ansi2html(text):
     result = _ansi2html.ansi2html(text)
@@ -55,6 +63,7 @@ def ansi2html(text):
             '<td><pre class="linenos">%s</pre></td>'
             '<td class="code"><div class="highlight"><pre>%s</pre></div></td>'
             '</tr></table>') % (linenos(result.count('<div')), result)
+
 
 class CodeHtmlFormatter(formatters.HtmlFormatter):
     def __init__(self, **kwargs):
@@ -68,7 +77,7 @@ class CodeHtmlFormatter(formatters.HtmlFormatter):
         for t, line in inner:
             if t == 1:
                 i += 1
-                yield t, '<div class="line" id="%s">%s</div>' % (i, line)
+                yield t, '<div class="line" id="%s">%s</div>' % (i, (line or '&#13;'))
             else:
                 yield t, line
 

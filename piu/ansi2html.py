@@ -36,5 +36,5 @@ def ansi2html(text):
 
     result = COLOR_REGEX.sub(single_sub, text)
     return ''.join(
-        '<div class="line" id="%s">%s</div>' % (i + 1, item)
+        '<div class="line" id="%s">%s</div>' % (i + 1, (item or '&#13;'))
         for i, item in enumerate(result.splitlines()))
